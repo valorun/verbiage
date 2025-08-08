@@ -308,18 +308,18 @@ class VerbiageChat:
                 if last_assistant_msg:
                     self.ui.print_raw_message(last_assistant_msg["content"])
                     self.ui.wait_for_enter()
-                    self.refresh_display()
+                    # On supprime le refresh_display() pour éviter le doublon
                 else:
                     self.ui.print_error("Aucun message d'assistant trouvé")
             else:
                 try:
                     message_index = int(parts[1])
-                    # Récupérer le message par index (0-based)
+                    # Récupérer le message par index (1-based) : on utilise message_index tel quel
                     msg = self.conversation_manager.get_message(message_index - 1)
                     if msg and msg["role"] == "assistant":
                         self.ui.print_raw_message(msg["content"])
                         self.ui.wait_for_enter()
-                        self.refresh_display()
+                        # On supprime le refresh_display() pour éviter le doublon
                     else:
                         self.ui.print_error(f"Le message #{message_index} n'est pas un message assistant ou n'existe pas")
                 except ValueError:

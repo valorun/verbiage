@@ -324,4 +324,7 @@ L'assistant peut utiliser des outils comme la recherche web.
     def wait_for_enter(self) -> None:
         """Attendre que l'utilisateur appuie sur Entrée"""
         self.console.print("\n[dim]Appuyez sur Entrée pour revenir...[/dim]")
+        # On utilise prompt_toolkit pour attendre l'entrée sans conflit avec le reste
         prompt("", key_bindings=self.key_bindings)
+        # On efface l'écran après l'appui sur Entrée pour éviter le doublon
+        self.console.clear()
