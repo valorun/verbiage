@@ -291,12 +291,15 @@ class VerbiageChat:
             else:
                 self.ui.print_info("Création annulée")
 
-        elif command == "/raw":
+        elif command.startswith("/raw"):
             if not self.conversation_manager.current_conversation:
                 self.ui.print_error("Aucune conversation active")
-            else:
+                return True
+
+            parts = command.split()
+            if len(parts) == 1:
+                # Afficher le dernier message assistant
                 messages = self.conversation_manager.current_conversation["messages"]
-                # Trouver le dernier message assistant
                 last_assistant_msg = None
                 for msg in reversed(messages):
                     if msg["role"] == "assistant":
@@ -304,8 +307,23 @@ class VerbiageChat:
                         break
                 if last_assistant_msg:
                     self.ui.print_raw_message(last_assistant_msg["content"])
+                    self.ui.wait_for_enter()
+                    self.refresh_display()
                 else:
                     self.ui.print_error("Aucun message d'assistant trouvé")
+            else:
+                try:
+                    message_index = int(parts[1])
+                    # Récupérer le message par index (0-based)
+                    msg = self.conversation_manager.get_message(message_index - 1)
+                    if msg and msg["role"] == "assistant":
+                        self.ui.print_raw_message(msg["content"])
+                        self.ui.wait_for_enter()
+                        self.refresh_display()
+                    else:
+                        self.ui.print_error(f"Le message #{message_index} n'est pas un message assistant ou n'existe pas")
+                except ValueError:
+                    self.ui.print_error("Numéro de message invalide")
 
         else:
             self.ui.print_error(f"Commande inconnue: {command}")
