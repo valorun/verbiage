@@ -297,29 +297,24 @@ class VerbiageChat:
                 return True
 
             parts = command.split()
-            # Collecter tous les messages assistant
-            assistant_messages = [
-                msg for msg in self.conversation_manager.current_conversation["messages"]
-                if msg["role"] == "assistant"
-            ]
-
-            if not assistant_messages:
-                self.ui.print_error("Aucun message d'assistant dans cette conversation")
+            messages = self.conversation_manager.current_conversation["messages"]
+            if not messages:
+                self.ui.print_error("Aucun message dans cette conversation")
                 return True
 
             if len(parts) == 1:
-                # Afficher le dernier message assistant
-                self.ui.print_raw_message(assistant_messages[-1]["content"])
+                # Afficher le dernier message
+                self.ui.print_raw_message(messages[-1]["content"])
                 self.ui.wait_for_enter()
                 self.refresh_display()
             else:
                 try:
-                    # L'index fourni par l'utilisateur est pour les messages assistant (1-based)
-                    assistant_msg_index = int(parts[1])
-                    if assistant_msg_index < 1 or assistant_msg_index > len(assistant_messages):
-                        self.ui.print_error(f"Numéro de message assistant invalide. Doit être entre 1 et {len(assistant_messages)}")
+                    # L'index fourni par l'utilisateur est l'index absolu dans la conversation (1-based)
+                    msg_index = int(parts[1])
+                    if msg_index < 1 or msg_index > len(messages):
+                        self.ui.print_error(f"Numéro de message invalide. Doit être entre 1 et {len(messages)}")
                     else:
-                        msg = assistant_messages[assistant_msg_index - 1]
+                        msg = messages[msg_index - 1]
                         self.ui.print_raw_message(msg["content"])
                         self.ui.wait_for_enter()
                         self.refresh_display()

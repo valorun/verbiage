@@ -318,8 +318,7 @@ L'assistant peut utiliser des outils comme la recherche web.
 
     def print_raw_message(self, content: str) -> None:
         """Afficher le message en brut sans formatage"""
-        self.console.clear()
-        self.console.print(content)
+        self.console.print("\n" + content)
 
     def wait_for_enter(self) -> None:
         """Attendre que l'utilisateur appuie sur Entrée"""
