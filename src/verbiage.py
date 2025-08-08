@@ -260,6 +260,7 @@ class VerbiageChat:
             self.refresh_display()
 
         elif command == "/help":
+            self.refresh_display()
             self.ui.show_help()
 
         elif command == "/agents":
