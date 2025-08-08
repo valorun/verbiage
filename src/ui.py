@@ -168,7 +168,7 @@ Bienvenue dans Verbiage ! Votre assistant IA avec accès aux outils web.
             self.display_message(role, content, tools_used, sources, i + 1)
 
     def show_help(self) -> None:
-        """Afficher l'aide"""
+        """Afficher l'aide et attendre l'entrée pour revenir"""
         help_text = """
 ## Commandes disponibles
 
@@ -204,6 +204,8 @@ L'assistant peut utiliser des outils comme la recherche web.
         self.console.print(
             Panel(Markdown(help_text), title="Aide", border_style="yellow")
         )
+        self.console.print("\n[dim]Appuyez sur Entrée pour revenir à la conversation...[/dim]")
+        self.wait_for_enter()
 
     def get_user_input(self, conversation_id: str | None = None) -> str:
         """Obtenir la saisie utilisateur avec prompt formaté et support multi-ligne"""

@@ -262,6 +262,8 @@ class VerbiageChat:
         elif command == "/help":
             self.refresh_display()
             self.ui.show_help()
+            # Après avoir quitté l'aide, rafraîchir l'affichage pour revenir à la conversation
+            self.refresh_display()
 
         elif command == "/agents":
             agents = self.agent_manager.list_agents()
