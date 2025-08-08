@@ -158,7 +158,6 @@ class VerbiageChat:
             return False
 
         elif command == "/clear":
-            self.ui.clear()
             self.refresh_display()
 
         elif command == "/new":
