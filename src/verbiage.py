@@ -259,6 +259,9 @@ class VerbiageChat:
             # Rafraîchir l'affichage complet
             self.refresh_display()
 
+        elif command == "/help":
+            self.ui.show_help()
+
         elif command == "/agents":
             agents = self.agent_manager.list_agents()
             current = self.agent_manager.get_current_agent()

@@ -189,8 +189,8 @@ Bienvenue dans Verbiage ! Votre assistant IA avec accès aux outils web.
 
 ### Système
 - `/config` - Afficher la configuration
-- `/help` - Afficher cette aide
 - `/quit` - Quitter l'application
+- `/help` - Afficher cette aide
 
 ## Saisie
 - **Ctrl+J** : Nouvelle ligne (mode multi-ligne)
