@@ -368,24 +368,21 @@ class VerbiageChat:
                 if not self.conversation_manager.current_conversation:
                     self.conversation_manager.create_new_conversation(user_input)
 
-                # Ajouter et afficher le message utilisateur
-                msg_count = self.conversation_manager.get_message_count()
+                # Ajouter le message utilisateur
                 self.conversation_manager.add_message("user", user_input)
-                self.ui.display_message("user", user_input, message_index=msg_count + 1)
+                self.refresh_display()
 
-                # Obtenir et afficher la réponse
+                # Obtenir la réponse
                 with self.ui.show_processing():
                     response_content, tools_used, sources = self.send_message_to_gpt(
                         user_input
                     )
 
+                # Ajouter la réponse de l'assistant
                 self.conversation_manager.add_message(
                     "assistant", response_content, tools_used, sources
                 )
-                msg_count = self.conversation_manager.get_message_count()
-                self.ui.display_message(
-                    "assistant", response_content, tools_used, sources, msg_count
-                )
+                self.refresh_display()
 
                 # Sauvegarder la conversation si activé
                 if config.auto_save:
