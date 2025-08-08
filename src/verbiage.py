@@ -168,6 +168,7 @@ class VerbiageChat:
             self.refresh_display()
 
         elif command == "/list":
+            self.refresh_display()
             conversations = self.conversation_manager.list_conversations()
             self.ui.show_conversations_list(conversations)
 
@@ -270,6 +271,7 @@ class VerbiageChat:
             current = self.agent_manager.get_current_agent()
             self.ui.print_info(f"Agent actuel: {current.name if current else 'Aucun'}")
             self.ui.show_agents_list(agents)
+            self.refresh_display()
 
         elif command.startswith("/agent"):
             parts = command.split()
@@ -284,8 +286,10 @@ class VerbiageChat:
                     )
                 else:
                     self.ui.print_error(f"Agent '{agent_name}' non trouvé")
+            self.refresh_display()
 
         elif command == "/create-agent":
+            self.refresh_display()
             agent_data = self.ui.get_agent_creation_input()
             if agent_data:
                 try:
