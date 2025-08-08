@@ -71,6 +71,7 @@ Bienvenue dans Verbiage ! Votre assistant IA avec accès aux outils web.
 
     def show_conversations_list(self, conversations) -> None:
         """Afficher la liste des conversations"""
+        self.clear()
         if not conversations:
             self.console.print("[yellow]Aucune conversation trouvée.[/yellow]")
             return
@@ -169,6 +170,7 @@ Bienvenue dans Verbiage ! Votre assistant IA avec accès aux outils web.
 
     def show_help(self) -> None:
         """Afficher l'aide et attendre l'entrée pour revenir"""
+        self.clear()
         help_text = """
 ## Commandes disponibles
 
@@ -254,6 +256,7 @@ L'assistant peut utiliser des outils comme la recherche web.
 
     def show_agents_list(self, agents) -> None:
         """Afficher la liste des agents disponibles"""
+        self.clear()
         if not agents:
             self.print_warning("Aucun agent trouvé.")
             return
