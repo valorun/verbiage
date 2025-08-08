@@ -291,6 +291,22 @@ class VerbiageChat:
             else:
                 self.ui.print_info("Création annulée")
 
+        elif command == "/raw":
+            if not self.conversation_manager.current_conversation:
+                self.ui.print_error("Aucune conversation active")
+            else:
+                messages = self.conversation_manager.current_conversation["messages"]
+                # Trouver le dernier message assistant
+                last_assistant_msg = None
+                for msg in reversed(messages):
+                    if msg["role"] == "assistant":
+                        last_assistant_msg = msg
+                        break
+                if last_assistant_msg:
+                    self.ui.print_raw_message(last_assistant_msg["content"])
+                else:
+                    self.ui.print_error("Aucun message d'assistant trouvé")
+
         else:
             self.ui.print_error(f"Commande inconnue: {command}")
 

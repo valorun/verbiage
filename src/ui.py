@@ -315,3 +315,7 @@ L'assistant peut utiliser des outils comme la recherche web.
             key_bindings=self.key_bindings,
             default=current_content,
         ).strip()
+
+    def print_raw_message(self, content: str) -> None:
+        """Afficher le message en brut sans formatage"""
+        self.console.print(content)
