@@ -297,31 +297,32 @@ class VerbiageChat:
                 return True
 
             parts = command.split()
+            # Collecter tous les messages assistant
+            assistant_messages = [
+                msg for msg in self.conversation_manager.current_conversation["messages"]
+                if msg["role"] == "assistant"
+            ]
+
+            if not assistant_messages:
+                self.ui.print_error("Aucun message d'assistant dans cette conversation")
+                return True
+
             if len(parts) == 1:
                 # Afficher le dernier message assistant
-                messages = self.conversation_manager.current_conversation["messages"]
-                last_assistant_msg = None
-                for msg in reversed(messages):
-                    if msg["role"] == "assistant":
-                        last_assistant_msg = msg
-                        break
-                if last_assistant_msg:
-                    self.ui.print_raw_message(last_assistant_msg["content"])
-                    self.ui.wait_for_enter()
-                    # On supprime le refresh_display() pour éviter le doublon
-                else:
-                    self.ui.print_error("Aucun message d'assistant trouvé")
+                self.ui.print_raw_message(assistant_messages[-1]["content"])
+                self.ui.wait_for_enter()
+                self.refresh_display()
             else:
                 try:
-                    message_index = int(parts[1])
-                    # Récupérer le message par index (1-based) : on utilise message_index tel quel
-                    msg = self.conversation_manager.get_message(message_index - 1)
-                    if msg and msg["role"] == "assistant":
+                    # L'index fourni par l'utilisateur est pour les messages assistant (1-based)
+                    assistant_msg_index = int(parts[1])
+                    if assistant_msg_index < 1 or assistant_msg_index > len(assistant_messages):
+                        self.ui.print_error(f"Numéro de message assistant invalide. Doit être entre 1 et {len(assistant_messages)}")
+                    else:
+                        msg = assistant_messages[assistant_msg_index - 1]
                         self.ui.print_raw_message(msg["content"])
                         self.ui.wait_for_enter()
-                        # On supprime le refresh_display() pour éviter le doublon
-                    else:
-                        self.ui.print_error(f"Le message #{message_index} n'est pas un message assistant ou n'existe pas")
+                        self.refresh_display()
                 except ValueError:
                     self.ui.print_error("Numéro de message invalide")
 
