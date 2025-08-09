@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """
-Module utilitaires pour l'API OpenAI
-Fonctions d'extraction et de traitement des réponses
+Utilitaires API pour Verbiage - Fonctions d'extraction et de traitement des réponses
 """
 
-from typing import Any, List
+from typing import Any, List, Dict
 
 
 def extract_text_from_response(response: Any) -> str:

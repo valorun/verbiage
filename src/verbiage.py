@@ -20,7 +20,7 @@ from .command_handlers import (
     handle_help, handle_agents, handle_agent, handle_create_agent,
     handle_raw, handle_unknown
 )
-from .api_interface import send_with_responses_api, send_with_chat_api
+from .api_client import send_with_responses_api, send_with_chat_api
 
 
 class VerbiageChat:
