@@ -1,5 +1,7 @@
 """Handlers de commande pour Verbiage"""
 
+from .ui import VerbiageUI
+
 def handle_quit(app, command: str) -> bool:
     app.ui.print_warning("Au revoir ! 👋")
     return False

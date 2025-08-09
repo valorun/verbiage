@@ -1,7 +1,7 @@
 """Interface avec l'API OpenAI pour Verbiage"""
 
-from config import config
-from api_utils import extract_text_from_response, extract_tools_from_response, extract_sources_from_response
+from .config import config
+from .api_utils import extract_text_from_response, extract_tools_from_response, extract_sources_from_response
 
 def build_message_context(agent_manager, conversation_manager) -> list:
     """Construit le contexte des messages pour les API"""
