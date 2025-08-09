@@ -18,13 +18,13 @@ from conversation import ConversationManager
 from ui import VerbiageUI
 
 # Nouveaux imports
-from command_handlers import (
+from src.command_handlers import (
     handle_quit, handle_clear, handle_new, handle_list,
     handle_load, handle_undo, handle_delete, handle_edit,
     handle_help, handle_agents, handle_agent, handle_create_agent,
     handle_raw, handle_unknown
 )
-from api_interface import send_with_responses_api, send_with_chat_api
+from src.api_interface import send_with_responses_api, send_with_chat_api
 
 
 class VerbiageChat:

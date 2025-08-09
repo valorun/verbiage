@@ -2,11 +2,11 @@
 import sys
 from pathlib import Path
 
-# Ajouter le dossier src au path
-src_path = Path(__file__).parent / "src"
-sys.path.insert(0, str(src_path))
+# Ajouter le dossier parent au path pour résoudre les imports
+project_root = Path(__file__).parent
+sys.path.insert(0, str(project_root))
 
-from verbiage import main
+from src.verbiage import main
 
 if __name__ == "__main__":
     main()
