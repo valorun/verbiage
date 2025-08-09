@@ -171,6 +171,8 @@ class VerbiageChat:
             self.refresh_display()
             conversations = self.conversation_manager.list_conversations()
             self.ui.show_conversations_list(conversations)
+            self.ui.wait_for_enter()
+            self.refresh_display()
 
         elif command.startswith("/load"):
             parts = command.split()
@@ -271,6 +273,7 @@ class VerbiageChat:
             current = self.agent_manager.get_current_agent()
             self.ui.print_info(f"Agent actuel: {current.name if current else 'Aucun'}")
             self.ui.show_agents_list(agents)
+            self.ui.wait_for_enter()
             self.refresh_display()
 
         elif command.startswith("/agent"):
