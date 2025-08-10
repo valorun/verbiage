@@ -10,9 +10,44 @@ Une application de chat en terminal utilisant GPT avec support d'outils comme la
 - **Interface riche** avec coloration syntaxique et markdown
 - **Historique persistant** des conversations en JSON
 
-## 🚀 Installation
+## 🚀 Installation Globale (recommandée)
+
+Installez avec pipx pour une utilisation globale :
 
 ```bash
+pipx install verbiage
+```
+
+### Configuration
+
+1. Créez le fichier de configuration :
+```bash
+mkdir -p ~/.config/verbiage
+touch ~/.config/verbiage/.env
+```
+
+2. Éditez `~/.config/verbiage/.env` :
+```env
+OPENAI_API_KEY="votre-clé-api-ici"
+# Autres variables optionnelles :
+# OPENAI_MODEL="gpt-4.1"
+# CONVERSATIONS_DIR="chemin/alternatif/conversations"
+# AGENTS_DIR="chemin/alternatif/agents"
+```
+
+## 🎯 Utilisation
+
+```bash
+# Lancez l'application
+verbiage
+```
+
+## Installation en Mode Développement
+
+Pour contribuer au projet :
+
+```bash
+git clone https://github.com/votre-utilisateur/verbiage.git
 cd verbiage
 
 # Créer l'environnement virtuel
@@ -20,28 +55,10 @@ python -m venv venv
 
 # Activer l'environnement virtuel
 source venv/bin/activate  # Linux/Mac
-# ou
-venv\Scripts\activate  # Windows
+venv\Scripts\activate    # Windows
 
 # Installer les dépendances
-pip install -r requirements.txt
-
-# Configurer la clé API
-export OPENAI_API_KEY="your-api-key-here"
-# ou copier .env.example vers .env et éditer
-```
-
-## 🎯 Utilisation
-
-```bash
-# Activez l'environnement virtuel si nécessaire
-source venv/bin/activate
-
-# Lancez l'application
-python start.py
-# ou
-python run.py
-```
+pip install -e .
 
 ### Commandes disponibles
 
