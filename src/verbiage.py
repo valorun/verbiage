@@ -46,7 +46,10 @@ class VerbiageChat:
     def __init__(self):
         self.ui = VerbiageUI()
         self.conversation_manager = ConversationManager(config.conversations_dir)
-        self.agent_manager = AgentManager()
+        self.agent_manager = AgentManager(config.agents_dir)
+
+        # Copier les agents par défaut au premier lancement
+        self._copy_default_agents()
 
         # Validation de la configuration
         is_valid, errors = config.validate()
@@ -108,6 +111,24 @@ class VerbiageChat:
         cmd = command.split()[0]
         handler = self.cmd_handlers.get(cmd, handle_unknown)
         return handler(self, command)
+
+    def _copy_default_agents(self):
+        """Copier les agents par défaut du package vers le répertoire global"""
+        from shutil import copy
+        from pathlib import Path
+        
+        # Chemin des agents dans le package
+        package_agents_dir = Path(__file__).parent / "agents"
+        global_agents_dir = Path(config.agents_dir)
+        
+        # Copier chaque fichier d'agent s'il n'existe pas
+        for agent_file in package_agents_dir.glob("*.json"):
+            dest_file = global_agents_dir / agent_file.name
+            if not dest_file.exists():
+                try:
+                    copy(agent_file, dest_file)
+                except Exception as e:
+                    self.ui.print_error(f"Erreur copie agent {agent_file.name}: {e}")
 
     def run(self) -> None:
         """Boucle principale de l'application"""
