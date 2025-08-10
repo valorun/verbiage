@@ -7,20 +7,20 @@ Application principale
 import sys
 from openai import OpenAI
 
-from .agents import AgentManager
-from .api_utils import extract_sources_from_response
-from .config import config
-from .conversation import ConversationManager
-from .ui import VerbiageUI
+from verbiage.agents import AgentManager
+from verbiage.api_utils import extract_sources_from_response
+from verbiage.config import config
+from verbiage.conversation import ConversationManager
+from verbiage.ui import VerbiageUI
 
 # Nouveaux imports
-from .command_handlers import (
+from verbiage.command_handlers import (
     handle_quit, handle_clear, handle_new, handle_list,
     handle_load, handle_undo, handle_delete, handle_edit,
     handle_help, handle_agents, handle_agent, handle_create_agent,
     handle_raw, handle_unknown
 )
-from .api_client import send_with_responses_api, send_with_chat_api
+from verbiage.api_client import send_with_responses_api, send_with_chat_api
 
 
 class VerbiageChat:

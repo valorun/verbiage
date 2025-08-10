@@ -16,4 +16,4 @@ readme = "README.md"
 requires-python = ">=3.10"
 
 [project.scripts]
-verbiage = "src.verbiage:main"
+verbiage = "verbiage.verbiage:main"
