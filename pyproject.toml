@@ -9,7 +9,8 @@ dependencies = [
     "openai",
     "rich",
     "platformdirs>=3.0",
-    "python-dotenv"
+    "python-dotenv",
+    "prompt_toolkit",
 ]
 description = "Verbiage - Chat GPT avec outils en terminal"
 readme = "README.md"
