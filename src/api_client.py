@@ -1,8 +1,7 @@
-"""Client API pour Verbiage - Gère toutes les interactions avec l'API OpenAI"""
+"""Interface avec l'API OpenAI pour Verbiage"""
 
 from .config import config
 from .api_utils import extract_text_from_response, extract_tools_from_response, extract_sources_from_response
-
 
 def build_message_context(agent_manager, conversation_manager) -> list:
     """Construit le contexte des messages pour les API"""
@@ -16,7 +15,6 @@ def build_message_context(agent_manager, conversation_manager) -> list:
             messages.append({"role": msg["role"], "content": msg["content"]})
     return messages
 
-
 def get_agent_config(agent_manager) -> tuple:
     """Retourne la configuration de l'agent"""
     current_agent = agent_manager.get_current_agent()
@@ -24,11 +22,10 @@ def get_agent_config(agent_manager) -> tuple:
     max_tokens = current_agent.max_tokens if current_agent else config.max_tokens
     return temperature, max_tokens
 
-
 def send_with_responses_api(client, agent_manager, conversation_manager, message: str) -> tuple:
     """Envoyer avec l'API responses.create"""
     messages = build_message_context(agent_manager, conversation_manager)
-    context_messages = [f"{msg['role']}: {msg["content"]}" for msg in messages]
+    context_messages = [f"{msg['role']}: {msg['content']}" for msg in messages]
     context_messages.append(f"user: {message}")
     full_input = "\n".join(context_messages)
 
@@ -46,7 +43,6 @@ def send_with_responses_api(client, agent_manager, conversation_manager, message
         extract_tools_from_response(response),
         extract_sources_from_response(response)
     )
-
 
 def send_with_chat_api(client, agent_manager, conversation_manager, message: str) -> tuple:
     """Envoyer avec l'API chat.completions.create standard"""

@@ -43,11 +43,7 @@ class VerbiageUI:
         def _(event):
             """Enter pour envoyer le message"""
             buffer = event.current_buffer
-            # Si c'est un buffer multi-ligne et qu'il y a déjà du contenu avec des sauts de ligne
-            if "\n" in buffer.text and not buffer.text.strip().endswith("\n\n"):
-                buffer.insert_text("\n")
-            else:
-                buffer.validate_and_handle()
+            buffer.validate_and_handle()
 
         return kb
 
