@@ -4,6 +4,7 @@ Module d'interface utilisateur pour Verbiage
 Gestion de l'affichage et des interactions utilisateur
 """
 
+import json
 from datetime import datetime
 
 from prompt_toolkit import prompt
@@ -297,12 +298,29 @@ L'assistant peut utiliser des outils comme la recherche web.
             )
         except ValueError:
             temperature = 0.7
+        
+        # Saisie des outils
+        self.print_info("\n🛠️ Outils (format JSON ou liste de noms séparés par des virgules)")
+        self.print_info("Exemples:")
+        self.print_info("  Format simple: web_search_preview")
+        self.print_info('  Format complexe: {"type":"mcp","server_label":"...","server_url":"...","require_approval":"never"}')
+        tools_input = prompt("Outils: ").strip()
+        tools = []
+        if tools_input:
+            try:
+                # Essayer de parser comme JSON
+                tool_json = json.loads(tools_input)
+                tools.append(tool_json)
+            except json.JSONDecodeError:
+                # Sinon traiter comme liste de chaînes
+                tools = [tool.strip() for tool in tools_input.split(",")]
 
         return {
             "name": name,
             "description": description,
             "system_prompt": system_prompt,
             "temperature": temperature,
+            "tools": tools,
         }
 
     def get_message_edit_input(self, current_content: str) -> str:

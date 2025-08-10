@@ -20,7 +20,7 @@ class Agent:
         description: str = "",
         temperature: float = 0.7,
         max_tokens: int = 2048,
-        tools: List[str] = None,
+        tools: Optional[List[Union[str, dict]]] = None,
         created_at: str = None,
     ):
         self.name = name

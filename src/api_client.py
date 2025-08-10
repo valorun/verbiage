@@ -30,11 +30,20 @@ def send_with_responses_api(client, agent_manager, conversation_manager, message
     full_input = "\n".join(context_messages)
 
     current_agent = agent_manager.get_current_agent()
-    tools = [{"type": tool} for tool in (current_agent.tools if current_agent else ["web_search_preview"])]
+    tools = current_agent.tools if current_agent else ["web_search_preview"]
+    # Convertir les outils en format API
+    api_tools = []
+    for tool in tools:
+        if isinstance(tool, str):
+            api_tools.append({"type": tool})
+        elif isinstance(tool, dict):
+            api_tools.append(tool)
+        else:
+            continue
 
     response = client.responses.create(
         model=config.openai_model, 
-        tools=tools, 
+        tools=api_tools, 
         input=full_input
     )
 
