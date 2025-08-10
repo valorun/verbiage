@@ -20,19 +20,19 @@ pipx install verbiage
 
 ### Configuration
 
-1. Créez le fichier de configuration :
+1. Éditez le fichier de configuration :
 ```bash
-mkdir -p ~/.config/verbiage
-touch ~/.config/verbiage/.env
+nano ~/.config/verbiage/config.json
 ```
 
-2. Éditez `~/.config/verbiage/.env` :
-```env
-OPENAI_API_KEY="votre-clé-api-ici"
-# Autres variables optionnelles :
-# OPENAI_MODEL="gpt-4.1"
-# CONVERSATIONS_DIR="chemin/alternatif/conversations"
-# AGENTS_DIR="chemin/alternatif/agents"
+2. Ajoutez votre clé API et autres paramètres :
+```json
+{
+  "openai_api_key": "votre-clé-api-ici",
+  "openai_model": "gpt-4.1",
+  "conversations_dir": "chemin/alternatif/conversations",
+  "agents_dir": "chemin/alternatif/agents"
+}
 ```
 
 ## 🎯 Utilisation
