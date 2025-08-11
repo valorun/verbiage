@@ -52,23 +52,3 @@ def send_with_responses_api(client, agent_manager, conversation_manager, message
         extract_tools_from_response(response),
         extract_sources_from_response(response)
     )
-
-def send_with_chat_api(client, agent_manager, conversation_manager, message: str) -> tuple:
-    """Envoyer avec l'API chat.completions.create standard"""
-    try:
-        messages = build_message_context(agent_manager, conversation_manager)
-        messages.append({"role": "user", "content": message})
-        temperature, max_tokens = get_agent_config(agent_manager)
-
-        response = client.chat.completions.create(
-            model=config.openai_model,
-            messages=messages,
-            max_tokens=max_tokens,
-            temperature=temperature,
-        )
-
-        assistant_message = response.choices[0].message
-        return assistant_message.content or "", [], []
-
-    except Exception as e:
-        return f"Erreur lors de l'appel à l'API: {str(e)}", [], []

@@ -35,7 +35,6 @@ class Config:
             "agents_dir": str(self.global_config_dir / "agents"),
             "max_tokens": 2048,
             "temperature": 0.7,
-            "use_responses_api": True,
             "debug_mode": False,
             "auto_save": True
         }
@@ -79,10 +78,6 @@ class Config:
     @property
     def temperature(self) -> float:
         return self._config.get("temperature", 0.7)
-
-    @property
-    def use_responses_api(self) -> bool:
-        return self._config.get("use_responses_api", True)
 
     @property
     def debug_mode(self) -> bool:
