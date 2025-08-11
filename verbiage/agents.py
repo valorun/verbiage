@@ -74,34 +74,6 @@ class AgentManager:
                 temperature=0.7,
                 tools=["web_search_preview"],
             ),
-            Agent(
-                name="developer",
-                system_prompt="Tu es un développeur expert en programmation. Fournis du code propre, bien documenté et explique tes solutions étape par étape. Utilise les meilleures pratiques.",
-                description="Expert en développement et programmation",
-                temperature=0.3,
-                tools=["web_search_preview"],
-            ),
-            Agent(
-                name="researcher",
-                system_prompt="Tu es un chercheur méticuleux. Fournis des informations précises, cite tes sources et présente des analyses approfondies. Toujours vérifier les faits avec la recherche web.",
-                description="Chercheur spécialisé dans l'analyse et la recherche",
-                temperature=0.4,
-                tools=["web_search_preview"],
-            ),
-            Agent(
-                name="creative",
-                system_prompt="Tu es un créatif inspiré. Pense de manière originale, propose des idées innovantes et des solutions créatives. N'hésite pas à sortir des sentiers battus.",
-                description="Agent créatif pour brainstorming et idées originales",
-                temperature=0.9,
-                tools=["web_search_preview"],
-            ),
-            Agent(
-                name="teacher",
-                system_prompt="Tu es un professeur pédagogue. Explique les concepts complexes de manière simple, utilise des exemples concrets et adapte ton niveau à ton interlocuteur.",
-                description="Enseignant spécialisé dans l'explication pédagogique",
-                temperature=0.6,
-                tools=["web_search_preview"],
-            ),
         ]
 
         for agent in default_agents:

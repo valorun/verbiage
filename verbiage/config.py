@@ -115,7 +115,6 @@ class Config:
         print(f"  Répertoire conversations: {self.conversations_dir}")
         print(f"  Max tokens: {self.max_tokens}")
         print(f"  Température: {self.temperature}")
-        print(f"  API responses: {self.use_responses_api}")
         print(f"  Mode debug: {self.debug_mode}")
         print(f"  Sauvegarde auto: {self.auto_save}")
         print("Note: La clé API n'est pas affichée pour des raisons de sécurité.")
