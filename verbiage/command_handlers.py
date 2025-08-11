@@ -162,6 +162,12 @@ def handle_raw(app, command: str) -> bool:
             app.ui.print_error("Numéro de message invalide")
     return True
 
+def handle_config(app, command: str) -> bool:
+    app.config.print_config(app.ui)
+    app.ui.wait_for_enter()
+    app.refresh_display()
+    return True
+
 def handle_unknown(app, command: str) -> bool:
     app.ui.print_error(f"Commande inconnue: {command}")
     return True

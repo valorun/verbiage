@@ -108,16 +108,16 @@ class Config:
 
         return len(errors) == 0, errors
 
-    def print_config(self) -> None:
-        """Afficher la configuration actuelle (sans la clé API)"""
-        print("Configuration Verbiage (config.json):")
-        print(f"  Modèle: {self.openai_model}")
-        print(f"  Répertoire conversations: {self.conversations_dir}")
-        print(f"  Max tokens: {self.max_tokens}")
-        print(f"  Température: {self.temperature}")
-        print(f"  Mode debug: {self.debug_mode}")
-        print(f"  Sauvegarde auto: {self.auto_save}")
-        print("Note: La clé API n'est pas affichée pour des raisons de sécurité.")
+    def print_config(self, ui) -> None:
+        """Affiche la configuration via l'UI"""
+        ui.print_info("⚙️ Configuration Verbiage")
+        ui.print_info(f"Modèle OpenAI: {self.openai_model}")
+        ui.print_info(f"Temperature: {self.temperature}")
+        ui.print_info(f"Max tokens: {self.max_tokens}")
+        ui.print_info(f"Auto-sauvegarde: {'activée' if self.auto_save else 'désactivée'}")
+        ui.print_info(f"Debug mode: {'activé' if self.debug_mode else 'désactivé'}")
+        ui.print_info(f"Répertoire conversations: {self.conversations_dir}")
+        ui.print_info(f"Répertoire agents: {self.agents_dir}")
 
 
 # Instance globale de configuration

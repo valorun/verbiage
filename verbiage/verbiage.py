@@ -73,6 +73,7 @@ class VerbiageChat:
             "/agent": handle_agent,
             "/create-agent": handle_create_agent,
             "/raw": handle_raw,
+            "/config": handle_config,
         }
 
     def send_message_to_gpt(self, message: str) -> tuple[str, list[str], list[dict]]:
