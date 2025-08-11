@@ -45,7 +45,7 @@ class VerbiageChat:
     def __init__(self):
         self.ui = VerbiageUI()
         self.conversation_manager = ConversationManager(config.conversations_dir)
-        self.agent_manager = AgentManager(config.agents_dir)
+        self.agent_manager = AgentManager(config.agents_dir, config)
 
         # Validation de la configuration
         is_valid, errors = config.validate()

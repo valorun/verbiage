@@ -51,17 +51,24 @@ class Agent:
 class AgentManager:
     """Gestionnaire des agents et presets"""
 
-    def __init__(self, agents_dir: str):
+    def __init__(self, agents_dir: str, config):
         self.agents_dir = Path(agents_dir)
         self.agents_dir.mkdir(exist_ok=True, parents=True)
         self.current_agent: Agent | None = None
+        self.config = config
 
         # Créer les agents par défaut seulement si le dossier est vide
         if not any(self.agents_dir.glob("*.json")):
             self._create_default_agents()
 
-        # Charger l'agent par défaut
-        self.switch_agent("assistant")
+        # Charger l'agent par défaut depuis la config
+        try:
+            if not self.switch_agent(self.config.default_agent):
+                print(f"Agent par défaut '{self.config.default_agent}' non trouvé, utilisation de 'assistant'")
+                self.switch_agent("assistant")
+        except Exception as e:
+            print(f"Erreur chargement agent par défaut: {str(e)}")
+            self.switch_agent("assistant")
 
     def _format_agent_filename(self, name: str) -> str:
         return f"{name.replace(' ', '_').lower()}.json"

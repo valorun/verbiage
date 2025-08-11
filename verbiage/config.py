@@ -36,7 +36,8 @@ class Config:
             "max_tokens": 2048,
             "temperature": 0.7,
             "debug_mode": False,
-            "auto_save": True
+            "auto_save": True,
+            "default_agent": "assistant"
         }
         with open(self.config_file, 'w', encoding='utf-8') as f:
             json.dump(default_config, f, indent=4)
@@ -87,6 +88,10 @@ class Config:
     def auto_save(self) -> bool:
         return self._config.get("auto_save", True)
 
+    @property
+    def default_agent(self) -> str:
+        return self._config.get("default_agent", "assistant")
+
     def validate(self) -> tuple[bool, list[str]]:
         """Valider la configuration"""
         errors = []
@@ -118,6 +123,7 @@ class Config:
         ui.print_info(f"Debug mode: {'activé' if self.debug_mode else 'désactivé'}")
         ui.print_info(f"Répertoire conversations: {self.conversations_dir}")
         ui.print_info(f"Répertoire agents: {self.agents_dir}")
+        ui.print_info(f"Agent par défaut: {self.default_agent}")
 
 
 # Instance globale de configuration
