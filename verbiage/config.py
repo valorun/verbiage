@@ -62,7 +62,7 @@ class Config:
 
     @property
     def openai_model(self) -> str:
-        return self._config.get("openai_model", "gpt-4.1")
+        return self._config.get("openai_model", "gpt-4.1-mini")
 
     @property
     def conversations_dir(self) -> str:
