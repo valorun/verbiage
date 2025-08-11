@@ -8,7 +8,6 @@ import sys
 from openai import OpenAI
 
 from verbiage.agents import AgentManager
-from verbiage.api_utils import extract_sources_from_response
 from verbiage.config import config
 from verbiage.conversation import ConversationManager
 from verbiage.ui import VerbiageUI

@@ -61,7 +61,7 @@ def send_with_chat_api(client, agent_manager, conversation_manager, message: str
         temperature, max_tokens = get_agent_config(agent_manager)
 
         response = client.chat.completions.create(
-            model=config.openai_fallback_model,
+            model=config.openai_model,
             messages=messages,
             max_tokens=max_tokens,
             temperature=temperature,

@@ -4,7 +4,6 @@ Module de configuration pour Verbiage
 Gestion des paramètres via fichier JSON
 """
 
-import os
 import json
 from pathlib import Path
 from platformdirs import user_config_dir
@@ -31,8 +30,7 @@ class Config:
         """Créer une configuration par défaut"""
         default_config = {
             "openai_api_key": "",
-            "openai_model": "gpt-4.1",
-            "openai_fallback_model": "gpt-5-mini",
+            "openai_model": "gpt-4.1-mini",
             "conversations_dir": str(self.global_config_dir / "conversations"),
             "agents_dir": str(self.global_config_dir / "agents"),
             "max_tokens": 2048,
@@ -65,10 +63,6 @@ class Config:
     @property
     def openai_model(self) -> str:
         return self._config.get("openai_model", "gpt-4.1")
-
-    @property
-    def openai_fallback_model(self) -> str:
-        return self._config.get("openai_fallback_model", "gpt-5-mini")
 
     @property
     def conversations_dir(self) -> str:
@@ -123,7 +117,6 @@ class Config:
         """Afficher la configuration actuelle (sans la clé API)"""
         print("Configuration Verbiage (config.json):")
         print(f"  Modèle: {self.openai_model}")
-        print(f"  Modèle fallback: {self.openai_fallback_model}")
         print(f"  Répertoire conversations: {self.conversations_dir}")
         print(f"  Max tokens: {self.max_tokens}")
         print(f"  Température: {self.temperature}")
