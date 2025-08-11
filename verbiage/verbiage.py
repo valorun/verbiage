@@ -17,7 +17,7 @@ from verbiage.command_handlers import (
     handle_quit, handle_clear, handle_new, handle_list,
     handle_load, handle_undo, handle_delete, handle_edit,
     handle_help, handle_agents, handle_agent, handle_create_agent,
-    handle_raw, handle_unknown
+    handle_raw, handle_config, handle_unknown
 )
 from verbiage.api_client import send_with_responses_api
 
