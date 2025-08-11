@@ -58,6 +58,7 @@ class VerbiageChat:
         self.client = OpenAI(api_key=config.openai_api_key)
         self.available_tools = [{"type": "web_search_preview"}]
         self.debug = config.debug_mode
+        self.config = config
 
         self.cmd_handlers = {
             "/quit": handle_quit,
