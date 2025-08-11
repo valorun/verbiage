@@ -7,7 +7,6 @@ Permet de définir différents agents avec des prompts système personnalisés
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
 
 
 class Agent:
@@ -20,8 +19,8 @@ class Agent:
         description: str = "",
         temperature: float = 0.7,
         max_tokens: int = 2048,
-        tools: Optional[List[str | dict]] = None,
-        created_at: str = None,
+        tools: list[str | dict] | None = None,
+        created_at: str | None = None,
     ):
         self.name = name
         self.system_prompt = system_prompt
@@ -31,7 +30,7 @@ class Agent:
         self.tools = tools or ["web_search_preview"]
         self.created_at = created_at or datetime.now().isoformat()
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Convertir l'agent en dictionnaire"""
         return {
             "name": self.name,
@@ -44,7 +43,7 @@ class Agent:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict) -> "Agent":
+    def from_dict(cls, data: dict) -> "Agent":
         """Créer un agent à partir d'un dictionnaire"""
         return cls(**data)
 
@@ -55,7 +54,7 @@ class AgentManager:
     def __init__(self, agents_dir: str):
         self.agents_dir = Path(agents_dir)
         self.agents_dir.mkdir(exist_ok=True, parents=True)
-        self.current_agent: Optional[Agent] = None
+        self.current_agent: Agent | None = None
 
         # Créer les agents par défaut seulement si le dossier est vide
         if not any(self.agents_dir.glob("*.json")):
@@ -63,6 +62,9 @@ class AgentManager:
 
         # Charger l'agent par défaut
         self.switch_agent("assistant")
+
+    def _format_agent_filename(self, name: str) -> str:
+        return f"{name.replace(' ', '_').lower()}.json"
 
     def _create_default_agents(self):
         """Créer les agents par défaut s'ils n'existent pas"""
@@ -81,14 +83,15 @@ class AgentManager:
 
     def save_agent(self, agent: Agent) -> None:
         """Sauvegarder un agent"""
-        agent_file = self.agents_dir / f"{agent.name}.json"
+        agent_file = self.agents_dir / f"{self._format_agent_filename(agent.name)}"
         with open(agent_file, "w", encoding="utf-8") as f:
             json.dump(agent.to_dict(), f, indent=2, ensure_ascii=False)
 
-    def load_agent(self, name: str) -> Optional[Agent]:
+    def load_agent(self, name: str) -> Agent | None:
         """Charger un agent par nom"""
-        agent_file = self.agents_dir / f"{name}.json"
+        agent_file = self.agents_dir / f"{self._format_agent_filename(name)}"
         if not agent_file.exists():
+            print(agent_file)
             return None
 
         try:
@@ -98,7 +101,7 @@ class AgentManager:
         except (json.JSONDecodeError, KeyError):
             return None
 
-    def list_agents(self) -> List[Dict]:
+    def list_agents(self) -> list[dict]:
         """Lister tous les agents disponibles"""
         agents = []
         for agent_file in self.agents_dir.glob("*.json"):
@@ -133,7 +136,7 @@ class AgentManager:
         description: str = "",
         temperature: float = 0.7,
         max_tokens: int = 2048,
-        tools: List[str] = None,
+        tools: list[str] | None = None,
     ) -> Agent:
         """Créer un nouvel agent"""
         agent = Agent(
@@ -161,11 +164,11 @@ class AgentManager:
             return True
         return False
 
-    def get_current_agent(self) -> Optional[Agent]:
+    def get_current_agent(self) -> Agent | None:
         """Obtenir l'agent actuel"""
         return self.current_agent
 
-    def get_system_message(self) -> Optional[Dict[str, str]]:
+    def get_system_message(self) -> dict[str, str] | None:
         """Obtenir le message système pour l'API"""
         if self.current_agent:
             return {"role": "system", "content": self.current_agent.system_prompt}
@@ -184,7 +187,7 @@ class AgentManager:
         except Exception:
             return False
 
-    def import_agent(self, import_path: str) -> Optional[Agent]:
+    def import_agent(self, import_path: str) -> Agent | None:
         """Importer un agent depuis un fichier"""
         try:
             with open(import_path, "r", encoding="utf-8") as f:

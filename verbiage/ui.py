@@ -9,7 +9,6 @@ from datetime import datetime
 
 from prompt_toolkit import prompt
 from prompt_toolkit.history import InMemoryHistory
-from prompt_toolkit.key_binding import KeyBindings
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
@@ -24,28 +23,10 @@ class VerbiageUI:
     def __init__(self):
         self.console = Console()
         self.history = InMemoryHistory()
-        self.key_bindings = self._setup_key_bindings()
 
     def clear(self) -> None:
         """Effacer l'écran du terminal"""
         self.console.clear()
-
-    def _setup_key_bindings(self):
-        """Configurer les raccourcis clavier"""
-        kb = KeyBindings()
-
-        @kb.add("c-j")  # Ctrl+j pour nouvelle ligne
-        def _(event):
-            """Ctrl+enter pour nouvelle ligne"""
-            event.current_buffer.insert_text("\n")
-
-        @kb.add("enter")
-        def _(event):
-            """Enter pour envoyer le message"""
-            buffer = event.current_buffer
-            buffer.validate_and_handle()
-
-        return kb
 
     def show_welcome(self) -> None:
         """Afficher l'écran d'accueil"""
@@ -193,8 +174,8 @@ Bienvenue dans Verbiage ! Votre assistant IA avec accès aux outils web.
 - `/help` - Afficher cette aide
 
 ## Saisie
-- **Ctrl+J** : Nouvelle ligne (mode multi-ligne)
-- **Enter** : Envoyer le message
+- **Enter** : Nouvelle ligne (mode multi-ligne)
+- **Alt+Enter** : Envoyer le message
 
 ## Utilisation
 
@@ -222,13 +203,12 @@ L'assistant peut utiliser des outils comme la recherche web.
 
         # Afficher l'aide pour la saisie multi-ligne
         self.console.print(
-            "[dim]💡 Ctrl+J pour nouvelle ligne, Enter pour envoyer[/dim]"
+            "[dim]💡 Enter pour nouvelle ligne, Alt+Enter pour envoyer[/dim]"
         )
 
         return prompt(
             prompt_text,
             history=self.history,
-            key_bindings=self.key_bindings,
             multiline=True,
         ).strip()
 
@@ -331,7 +311,6 @@ L'assistant peut utiliser des outils comme la recherche web.
         return prompt(
             ">> ",
             multiline=True,
-            key_bindings=self.key_bindings,
             default=current_content,
         ).strip()
 
@@ -344,6 +323,6 @@ L'assistant peut utiliser des outils comme la recherche web.
         """Attendre que l'utilisateur appuie sur Entrée"""
         self.console.print("\n[dim]Appuyez sur Entrée pour revenir à la conversation...[/dim]")
         # On utilise prompt_toolkit pour attendre l'entrée sans conflit avec le reste
-        prompt("", key_bindings=self.key_bindings)
+        prompt("")
         # On efface l'écran après l'appui sur Entrée pour éviter le doublon
         self.console.clear()

@@ -1,7 +1,5 @@
 """Handlers de commande pour Verbiage"""
 
-from .ui import VerbiageUI
-
 def handle_quit(app, command: str) -> bool:
     app.ui.print_warning("Au revoir ! 👋")
     return False
@@ -109,6 +107,7 @@ def handle_agents(app, command: str) -> bool:
     return True
 
 def handle_agent(app, command: str) -> bool:
+    app.refresh_display()
     parts = command.split()
     if len(parts) != 2:
         app.ui.print_error("Usage: /agent <nom>")
@@ -119,7 +118,6 @@ def handle_agent(app, command: str) -> bool:
             app.ui.print_success(f"Agent changé: {current.name} - {current.description}")
         else:
             app.ui.print_error(f"Agent '{agent_name}' non trouvé")
-    app.refresh_display()
     return True
 
 def handle_create_agent(app, command: str) -> bool:
