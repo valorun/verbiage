@@ -116,7 +116,10 @@ class VerbiageChat:
                 if self.conversation_manager.current_conversation:
                     conv_id = self.conversation_manager.current_conversation["id"]
 
-                user_input = self.ui.get_user_input(conv_id)
+                user_input = self.ui.get_user_input(
+                    conv_id,
+                    current_conversation=self.conversation_manager.current_conversation
+                )
 
                 if not user_input:
                     continue

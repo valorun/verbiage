@@ -6,9 +6,13 @@ Gestion de l'affichage et des interactions utilisateur
 
 import json
 from datetime import datetime
+import os
+import subprocess
+from tempfile import NamedTemporaryFile
 
 from prompt_toolkit import prompt
 from prompt_toolkit.history import InMemoryHistory
+from prompt_toolkit.key_binding import KeyBindings
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
@@ -187,7 +191,7 @@ L'assistant peut utiliser des outils comme la recherche web.
         )
         self.wait_for_enter()
 
-    def get_user_input(self, conversation_id: str | None = None) -> str:
+    def get_user_input(self, conversation_id: str | None = None, current_conversation: dict | None = None) -> str:
         """Obtenir la saisie utilisateur avec prompt formaté et support multi-ligne"""
         if conversation_id:
             # Convertir YYYYMMDD_HHMMSS en format lisible
@@ -203,13 +207,24 @@ L'assistant peut utiliser des outils comme la recherche web.
 
         # Afficher l'aide pour la saisie multi-ligne
         self.console.print(
-            "[dim]💡 Enter pour nouvelle ligne, Alt+Enter pour envoyer[/dim]"
+            "[dim]💡 Enter pour nouvelle ligne, Alt+Enter pour envoyer, Ctrl+E pour éditeur[/dim]"
         )
+
+        kb = KeyBindings()
+
+        @kb.add("c-e")
+        def _(event):
+            buffer = event.app.current_buffer
+            context = self._get_context_content(current_conversation)
+            edited = self.open_editor(context=context, initial_content=buffer.text)
+            if edited is not None:
+                buffer.text = edited
 
         return prompt(
             prompt_text,
             history=self.history,
             multiline=True,
+            key_bindings=kb,
         ).strip()
 
     def show_processing(self):
@@ -318,6 +333,52 @@ L'assistant peut utiliser des outils comme la recherche web.
         """Afficher le message en brut sans formatage"""
         self.console.clear()
         self.console.print(content)
+
+    def _get_context_content(self, conversation: dict | None) -> str:
+        """Formatte l'historique de conversation en commentaires"""
+        if not conversation:
+            return ""
+        
+        context_lines = ["## Contexte de la conversation :"]
+        for msg in conversation.get("messages", []):
+            role_emoji = "👤" if msg["role"] == "user" else "🤖"
+            context_lines.append(f"# {role_emoji} {msg['role'].capitalize()} :")
+            for line in msg["content"].split('\n'):
+                context_lines.append(f"#   {line}")
+            if msg.get("tools_used"):
+                tools = ', '.join(msg["tools_used"])
+                context_lines.append(f"#   Outils utilisés : {tools}")
+        return '\n'.join(context_lines) + '\n\n'
+    
+    def open_editor(self, context: str = "", initial_content: str = "") -> str | None:
+        """Ouvre l'éditeur système par défaut"""
+        try:
+            with NamedTemporaryFile(suffix=".md", mode='w+', delete=False) as tmp:
+                # Écrire le contexte et le contenu initial
+                tmp.write(f"{context}\n")
+                tmp.write("# Entrez votre message/commande ci-dessous :\n\n")
+                tmp.write(initial_content)
+                tmp_path = tmp.name
+            
+            # Obtenir l'éditeur par défaut
+            editor = os.environ.get('EDITOR', 'nano')
+            
+            # Ouvrir l'éditeur
+            subprocess.call([editor, tmp_path])
+            
+            # Lire le contenu édité
+            with open(tmp_path, "r") as tmp_file:
+                content = tmp_file.read()
+            
+            # Supprimer le fichier temporaire
+            os.unlink(tmp_path)
+            
+            # Filtrer les lignes de commentaires et retourner
+            return '\n'.join(line for line in content.split('\n') if not line.startswith('#')).strip()
+            
+        except Exception as e:
+            self.print_error(f"Erreur avec l'éditeur : {e}")
+            return None
 
     def wait_for_enter(self) -> None:
         """Attendre que l'utilisateur appuie sur Entrée"""
