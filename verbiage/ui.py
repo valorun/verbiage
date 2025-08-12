@@ -324,9 +324,20 @@ L'assistant peut utiliser des outils comme la recherche web.
         self.print_info(f"[dim]{current_content}[/dim]")
         self.print_info("\n📝 Nouveau contenu (laissez vide pour annuler):")
 
+        kb = KeyBindings()
+
+        @kb.add("c-e")
+        def _(event):
+            buffer = event.app.current_buffer
+            edited = self.open_editor(initial_content=buffer.text)
+            if edited is not None:
+                buffer.text = edited
+                buffer.validate_and_handle()
+
         return prompt(
             ">> ",
             default=current_content,
+            key_bindings=kb,
         ).strip()
 
     def print_raw_message(self, content: str) -> None:
