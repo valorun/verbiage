@@ -219,6 +219,8 @@ L'assistant peut utiliser des outils comme la recherche web.
             edited = self.open_editor(context=context, initial_content=buffer.text)
             if edited is not None:
                 buffer.text = edited
+                # Valider le buffer pour envoyer immédiatement
+                buffer.validate_and_handle()
 
         return prompt(
             prompt_text,
