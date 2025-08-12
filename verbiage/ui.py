@@ -199,11 +199,11 @@ L'assistant peut utiliser des outils comme la recherche web.
                 date_part, time_part = conversation_id.split("_")
                 formatted_date = f"{date_part[6:8]}/{date_part[4:6]}/{date_part[:4]}"
                 formatted_time = f"{time_part[:2]}:{time_part[2:4]}"
-                prompt_text = f"[{formatted_date} {formatted_time}] >>>"
+                prompt_text = f"[{formatted_date} {formatted_time}] >>> "
             except (ValueError, IndexError):
-                prompt_text = f"[{conversation_id}] >>>"
+                prompt_text = f"[{conversation_id}] >>> "
         else:
-            prompt_text = ">>>"
+            prompt_text = ">>> "
 
         # Afficher l'aide pour la saisie multi-ligne
         self.console.print(
@@ -225,7 +225,6 @@ L'assistant peut utiliser des outils comme la recherche web.
         return prompt(
             prompt_text,
             history=self.history,
-            multiline=True,
             key_bindings=kb,
         ).strip()
 
@@ -327,7 +326,6 @@ L'assistant peut utiliser des outils comme la recherche web.
 
         return prompt(
             ">> ",
-            multiline=True,
             default=current_content,
         ).strip()
 
