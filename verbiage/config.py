@@ -30,7 +30,7 @@ class Config:
         """Créer une configuration par défaut"""
         default_config = {
             "openai_api_key": "",
-            "openai_model": "gpt-4.1-mini",
+            "model": "gpt-4.1-mini",
             "conversations_dir": str(self.global_config_dir / "conversations"),
             "agents_dir": str(self.global_config_dir / "agents"),
             "max_tokens": 2048,
@@ -61,8 +61,8 @@ class Config:
         return self._config.get("openai_api_key", "")
 
     @property
-    def openai_model(self) -> str:
-        return self._config.get("openai_model", "gpt-4.1-mini")
+    def model(self) -> str:
+        return self._config.get("model", "gpt-4.1-mini")
 
     @property
     def conversations_dir(self) -> str:
@@ -116,7 +116,7 @@ class Config:
     def print_config(self, ui) -> None:
         """Affiche la configuration via l'UI"""
         ui.print_info("⚙️ Configuration Verbiage")
-        ui.print_info(f"Modèle OpenAI: {self.openai_model}")
+        ui.print_info(f"Modèle: {self.model}")
         ui.print_info(f"Temperature: {self.temperature}")
         ui.print_info(f"Max tokens: {self.max_tokens}")
         ui.print_info(f"Auto-sauvegarde: {'activée' if self.auto_save else 'désactivée'}")

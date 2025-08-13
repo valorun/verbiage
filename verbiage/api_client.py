@@ -42,7 +42,7 @@ def send_with_responses_api(client, agent_manager, conversation_manager, message
             continue
 
     response = client.responses.create(
-        model=config.openai_model, 
+        model=config.model, 
         tools=api_tools, 
         input=full_input
     )
