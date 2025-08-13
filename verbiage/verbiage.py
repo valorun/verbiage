@@ -55,7 +55,14 @@ class VerbiageChat:
                 self.ui.print_info(f"  - {error}")
             sys.exit(1)
 
-        self.client = OpenAI(api_key=config.openai_api_key)
+        # Initialiser le client selon le fournisseur sélectionné
+        if config.api_provider == "openrouter":
+            self.client = OpenAI(
+                api_key=config.openrouter_api_key,
+                base_url="https://openrouter.ai/api/v1"
+            )
+        else:
+            self.client = OpenAI(api_key=config.openai_api_key)
         self.available_tools = [{"type": "web_search_preview"}]
         self.debug = config.debug_mode
         self.config = config

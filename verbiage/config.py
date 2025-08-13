@@ -32,6 +32,7 @@ class Config:
             "openai_api_key": "",
             "openrouter_api_key": "",
             "model": "gpt-4.1-mini",
+            "api_provider": "openai",
             "conversations_dir": str(self.global_config_dir / "conversations"),
             "agents_dir": str(self.global_config_dir / "agents"),
             "max_tokens": 2048,
@@ -68,6 +69,10 @@ class Config:
     @property
     def model(self) -> str:
         return self._config.get("model", "gpt-4.1-mini")
+    
+    @property
+    def api_provider(self) -> str:
+        return self._config.get("api_provider", "openai").lower()
 
     @property
     def conversations_dir(self) -> str:
@@ -121,6 +126,7 @@ class Config:
     def print_config(self, ui) -> None:
         """Affiche la configuration via l'UI"""
         ui.print_info("⚙️ Configuration Verbiage")
+        ui.print_info(f"Fournisseur d'API: {self.api_provider}")
         ui.print_info(f"Modèle: {self.model}")
         ui.print_info(f"Temperature: {self.temperature}")
         ui.print_info(f"Max tokens: {self.max_tokens}")
