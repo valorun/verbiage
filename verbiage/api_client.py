@@ -26,6 +26,7 @@ def build_openrouter_payload(agent_manager, conversation_manager, message: str) 
     
     return {
         "model": config.model,
+        #"plugins": [{ "id": "web" }],
         "messages": messages,
         "temperature": current_agent.temperature if current_agent else config.temperature,
         "max_tokens": current_agent.max_tokens if current_agent else config.max_tokens,

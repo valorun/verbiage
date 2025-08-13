@@ -4,8 +4,8 @@ Une application de chat en terminal utilisant GPT avec support d'outils comme la
 
 ## ✨ Fonctionnalités
 
-- **Chat interactif** avec GPT-4 en terminal
-- **Outils intégrés** comme `web_search_preview` pour la recherche web
+- **Chat interactif** avec tout les models disponibles avec OpenRouter
+- **Outils intégrés** comme la recherche web
 - **Gestion de conversations** avec sauvegarde automatique
 - **Interface riche** avec coloration syntaxique et markdown
 - **Historique persistant** des conversations en JSON
@@ -49,7 +49,7 @@ verbiage
 Pour contribuer ou développer localement :
 
 ```bash
-git clone https://github.com/votre-utilisateur/verbiage.git
+git clone https://github.com/valorun/verbiage.git
 cd verbiage
 
 # Installation en mode développement avec pipx
@@ -137,25 +137,6 @@ Les conversations sont sauvegardées au format JSON dans le dossier `conversatio
 }
 ```
 
-## 🔧 Configuration
-
-### Variables d'environnement
-
-- `OPENAI_API_KEY` : Clé API OpenAI (obligatoire)
-
-### Outils disponibles
-
-Actuellement, l'application supporte :
-- **web_search_preview** : Recherche d'informations en temps réel sur le web
-
-### Améliorations interface
-- **Navigation avec flèches** : Utilisez ← → pour naviguer dans votre texte
-- **Historique des commandes** : Utilisez ↑ ↓ pour parcourir l'historique
-- **Format de date lisible** : `[08/01/2025 14:31]` au lieu de `[20250108_143107]`
-- **Saisie multi-ligne** : Ctrl+Enter pour nouvelle ligne, Enter pour envoyer
-- **Gestion des messages** : Modifier, supprimer, annuler les messages
-- **Système d'agents** : Agents prédéfinis (assistant, developer, researcher...)
-
 ## 🤝 Contribution
 
 1. Fork le projet
@@ -167,32 +148,6 @@ Actuellement, l'application supporte :
 ## 📄 Licence
 
 Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
-
-## 🆘 Résolution de problèmes
-
-### Erreur: "OPENAI_API_KEY non définie"
-Vérifiez que votre clé API est configurée :
-```bash
-echo $OPENAI_API_KEY
-# ou vérifiez le fichier .env
-```
-
-### Erreur: "Module non trouvé"
-Réinstallez les dépendances :
-```bash
-pip install -r requirements.txt
-```
-
-### L'API responses.create ne fonctionne pas
-L'application basculera automatiquement vers l'API standard `chat.completions`.
-
-## 🎨 Interface
-
-L'application utilise Rich pour une interface colorée :
-- Messages utilisateur en bleu
-- Réponses assistant en vert avec formatage Markdown
-- Indicateurs d'outils utilisés
-- Gestion interactive des conversations
 
 ---
 
