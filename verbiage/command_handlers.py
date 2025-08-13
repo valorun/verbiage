@@ -70,7 +70,10 @@ def handle_edit(app, command: str) -> bool:
             msg_num = int(parts[1])
             current_msg = app.conversation_manager.get_message(msg_num)
             if current_msg:
-                new_content = app.ui.get_message_edit_input(current_msg["content"])
+                new_content = app.ui.get_message_edit_input(
+                    current_msg["content"],
+                    app.conversation_manager.current_conversation
+                )
                 if new_content:
                     if app.conversation_manager.edit_message(msg_num, new_content):
                         app.ui.print_success(f"Message #{msg_num} modifié")

@@ -318,7 +318,7 @@ L'assistant peut utiliser des outils comme la recherche web.
             "tools": tools,
         }
 
-    def get_message_edit_input(self, current_content: str) -> str:
+    def get_message_edit_input(self, current_content: str, conversation: dict | None = None) -> str:
         """Obtenir le nouveau contenu pour modifier un message"""
         self.print_info("\n✏️  Message actuel:")
         self.print_info(f"[dim]{current_content}[/dim]")
@@ -329,7 +329,8 @@ L'assistant peut utiliser des outils comme la recherche web.
         @kb.add("c-e")
         def _(event):
             buffer = event.app.current_buffer
-            edited = self.open_editor(initial_content=buffer.text)
+            context = self._get_context_content(conversation)
+            edited = self.open_editor(context=context, initial_content=buffer.text)
             if edited is not None:
                 buffer.text = edited
                 buffer.validate_and_handle()
