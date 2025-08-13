@@ -106,8 +106,8 @@ class Config:
         """Valider la configuration"""
         errors = []
 
-        if not self.openai_api_key:
-            errors.append("openai_api_key non définie dans config.json")
+        if not self.api_key:
+            errors.append("Clé API OpenRouter manquante dans config.json")
 
         if not Path(self.conversations_dir).exists():
             try:
@@ -126,7 +126,6 @@ class Config:
     def print_config(self, ui) -> None:
         """Affiche la configuration via l'UI"""
         ui.print_info("⚙️ Configuration Verbiage")
-        ui.print_info(f"Fournisseur d'API: {self.api_provider}")
         ui.print_info(f"Modèle: {self.model}")
         ui.print_info(f"Temperature: {self.temperature}")
         ui.print_info(f"Max tokens: {self.max_tokens}")
