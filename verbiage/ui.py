@@ -350,7 +350,7 @@ L'assistant peut utiliser des outils comme la recherche web.
         if not conversation:
             return ""
         
-        context_lines = ["## Contexte de la conversation :"]
+        context_lines = ["\n## Contexte de la conversation :"]
         for msg in conversation.get("messages", []):
             role_emoji = "👤" if msg["role"] == "user" else "🤖"
             context_lines.append(f"# {role_emoji} {msg['role'].capitalize()} :")
@@ -359,7 +359,7 @@ L'assistant peut utiliser des outils comme la recherche web.
             if msg.get("tools_used"):
                 tools = ', '.join(msg["tools_used"])
                 context_lines.append(f"#   Outils utilisés : {tools}")
-        return '\n'.join(context_lines) + '\n\n'
+        return '\n'.join(context_lines)
     
     def open_editor(self, context: str = "", initial_content: str = "") -> str | None:
         """Ouvre l'éditeur système par défaut"""
@@ -367,7 +367,6 @@ L'assistant peut utiliser des outils comme la recherche web.
             with NamedTemporaryFile(suffix=".md", mode='w+', delete=False) as tmp:
                 # Écrire le contexte et le contenu initial
                 tmp.write(f"{context}\n")
-                tmp.write("# Entrez votre message/commande ci-dessous :\n\n")
                 tmp.write(initial_content)
                 tmp_path = tmp.name
             
