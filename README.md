@@ -10,55 +10,50 @@ Une application de chat en terminal utilisant GPT avec support d'outils comme la
 - **Interface riche** avec coloration syntaxique et markdown
 - **Historique persistant** des conversations en JSON
 
-## 🚀 Installation Globale (recommandée)
+## 🚀 Installation
 
-Installez avec pipx pour une utilisation globale :
-
+### Méthode recommandée avec pipx
 ```bash
 pipx install verbiage
 ```
 
-### Configuration
+### Configuration initiale
+1. Créez le dossier de configuration :
+```bash
+mkdir -p ~/.config/verbiage
+```
 
-1. Éditez le fichier de configuration :
+2. Éditez le fichier de configuration :
 ```bash
 nano ~/.config/verbiage/config.json
 ```
 
-2. Ajoutez votre clé API et autres paramètres :
+3. Ajoutez votre clé OpenRouter et les paramètres :
 ```json
 {
-  "openai_api_key": "votre-clé-api-ici",
-  "openai_model": "gpt-4.1",
-  "conversations_dir": "chemin/alternatif/conversations",
-  "agents_dir": "chemin/alternatif/agents"
+  "api_key": "votre-clé-openrouter",
+  "model": "deepseek/deepseek-chat-v3-0324:free",
+  "conversations_dir": "~/.config/verbiage/conversations",
+  "agents_dir": "~/.config/verbiage/agents",
+  "default_agent": "assistant"
 }
 ```
 
 ## 🎯 Utilisation
-
+Après installation :
 ```bash
-# Lancez l'application
 verbiage
 ```
 
-## Installation en Mode Développement
-
-Pour contribuer au projet :
+## Pour les développeurs
+Pour contribuer ou développer localement :
 
 ```bash
 git clone https://github.com/votre-utilisateur/verbiage.git
 cd verbiage
 
-# Créer l'environnement virtuel
-python -m venv venv
-
-# Activer l'environnement virtuel
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate    # Windows
-
-# Installer les dépendances
-pip install -e .
+# Installation en mode développement avec pipx
+pipx install -e .
 
 ### Commandes disponibles
 
