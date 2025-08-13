@@ -30,6 +30,7 @@ class Config:
         """Créer une configuration par défaut"""
         default_config = {
             "openai_api_key": "",
+            "openrouter_api_key": "",
             "model": "gpt-4.1-mini",
             "conversations_dir": str(self.global_config_dir / "conversations"),
             "agents_dir": str(self.global_config_dir / "agents"),
@@ -59,6 +60,10 @@ class Config:
     @property
     def openai_api_key(self) -> str:
         return self._config.get("openai_api_key", "")
+    
+    @property
+    def openrouter_api_key(self) -> str:
+        return self._config.get("openrouter_api_key", "")
 
     @property
     def model(self) -> str:
