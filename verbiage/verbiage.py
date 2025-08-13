@@ -5,12 +5,13 @@ Application principale
 """
 
 import sys
-from openai import OpenAI
+import requests
 
 from verbiage.agents import AgentManager
 from verbiage.config import config
 from verbiage.conversation import ConversationManager
 from verbiage.ui import VerbiageUI
+from verbiage.api_client import send_with_openrouter
 
 # Nouveaux imports
 from verbiage.command_handlers import (
@@ -19,11 +20,10 @@ from verbiage.command_handlers import (
     handle_help, handle_agents, handle_agent, handle_create_agent,
     handle_raw, handle_config, handle_unknown
 )
-from verbiage.api_client import send_with_responses_api
 
 
 class VerbiageChat:
-    """Application principale de chat GPT avec outils"""
+    """Application principale de chat avec OpenRouter"""
 
     def refresh_display(self):
         """Effacer et réafficher en-tête, astuces et historique"""
@@ -47,10 +47,6 @@ class VerbiageChat:
         self.conversation_manager = ConversationManager(config.conversations_dir)
         self.agent_manager = AgentManager(config.agents_dir, config)
 
-        # Ajouter un avertissement si OpenRouter est utilisé sans clé API spécifique
-        if config.api_provider == "openrouter" and not config.openrouter_api_key:
-            self.ui.print_warning("Attention: OpenRouter est sélectionné mais la clé API n'est pas configurée")
-        
         # Validation de la configuration
         is_valid, errors = config.validate()
         if not is_valid:
@@ -59,15 +55,8 @@ class VerbiageChat:
                 self.ui.print_info(f"  - {error}")
             sys.exit(1)
 
-        # Initialiser le client selon le fournisseur sélectionné
-        if config.api_provider == "openrouter":
-            self.client = OpenAI(
-                api_key=config.openrouter_api_key,
-                base_url="https://openrouter.ai/api/v1"
-            )
-        else:
-            self.client = OpenAI(api_key=config.openai_api_key)
-        self.available_tools = [{"type": "web_search_preview"}]
+        # Initialiser le client HTTP
+        self.client_session = requests.Session()
         self.debug = config.debug_mode
         self.config = config
 
@@ -90,11 +79,11 @@ class VerbiageChat:
 
     def send_message_to_gpt(self, message: str) -> tuple[str, list[str], list[dict]]:
         try:
-            return send_with_responses_api(
-                self.client, 
+            return send_with_openrouter(
                 self.agent_manager, 
                 self.conversation_manager, 
-                message
+                message,
+                self.client_session
             )
         except Exception as e:
             if self.debug:

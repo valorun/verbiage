@@ -1,54 +1,59 @@
-"""Interface avec l'API OpenAI pour Verbiage"""
+"""Interface avec l'API OpenRouter pour Verbiage"""
 
+import requests
+import json
 from .config import config
-from .api_utils import extract_text_from_response, extract_tools_from_response, extract_sources_from_response
 
-def build_message_context(agent_manager, conversation_manager) -> list:
-    """Construit le contexte des messages pour les API"""
+def build_openrouter_payload(agent_manager, conversation_manager, message: str) -> dict:
+    """Construit le payload pour l'API OpenRouter"""
     messages = []
+    
+    # Message système
     system_msg = agent_manager.get_system_message()
     if system_msg:
-        messages.append(system_msg)
-
+        messages.append({"role": "system", "content": system_msg["content"]})
+    
+    # Historique de conversation
     if conversation_manager.current_conversation:
         for msg in conversation_manager.current_conversation["messages"]:
             messages.append({"role": msg["role"], "content": msg["content"]})
-    return messages
+    
+    # Nouveau message utilisateur
+    messages.append({"role": "user", "content": message})
 
-def get_agent_config(agent_manager) -> tuple:
-    """Retourne la configuration de l'agent"""
+    # Configuration de l'agent
     current_agent = agent_manager.get_current_agent()
-    temperature = current_agent.temperature if current_agent else config.temperature
-    max_tokens = current_agent.max_tokens if current_agent else config.max_tokens
-    return temperature, max_tokens
+    
+    return {
+        "model": config.model,
+        "messages": messages,
+        "temperature": current_agent.temperature if current_agent else config.temperature,
+        "max_tokens": current_agent.max_tokens if current_agent else config.max_tokens,
+        "stop": None
+    }
 
-def send_with_responses_api(client, agent_manager, conversation_manager, message: str) -> tuple:
-    """Envoyer avec l'API responses.create"""
-    messages = build_message_context(agent_manager, conversation_manager)
-    context_messages = [f"{msg['role']}: {msg['content']}" for msg in messages]
-    context_messages.append(f"user: {message}")
-    full_input = "\n".join(context_messages)
-
-    current_agent = agent_manager.get_current_agent()
-    tools = current_agent.tools if current_agent else ["web_search_preview"]
-    # Convertir les outils en format API
-    api_tools = []
-    for tool in tools:
-        if isinstance(tool, str):
-            api_tools.append({"type": tool})
-        elif isinstance(tool, dict):
-            api_tools.append(tool)
-        else:
-            continue
-
-    response = client.responses.create(
-        model=config.model, 
-        tools=api_tools, 
-        input=full_input
-    )
-
-    return (
-        extract_text_from_response(response),
-        extract_tools_from_response(response),
-        extract_sources_from_response(response)
-    )
+def send_with_openrouter(agent_manager, conversation_manager, message: str, session: requests.Session) -> tuple:
+    """Envoyer une requête à l'API OpenRouter"""
+    payload = build_openrouter_payload(agent_manager, conversation_manager, message)
+    
+    try:
+        response = session.post(
+            url="https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {config.api_key}",
+                "Content-Type": "application/json",
+                "HTTP-Referer": config.site_url,
+                "X-Title": config.site_name
+            },
+            json=payload
+        )
+        
+        response.raise_for_status()
+        response_data = response.json()
+        
+        content = response_data['choices'][0]['message']['content']
+        # Pour compatibilité temporaire - à simplifier plus tard
+        return content, [], []
+        
+    except Exception as e:
+        return f"Erreur OpenRouter: {str(e)}", [], []

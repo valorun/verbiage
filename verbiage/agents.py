@@ -27,7 +27,6 @@ class Agent:
         self.description = description
         self.temperature = temperature
         self.max_tokens = max_tokens
-        self.tools = tools or ["web_search_preview"]
         self.created_at = created_at or datetime.now().isoformat()
 
     def to_dict(self) -> dict:
@@ -81,7 +80,6 @@ class AgentManager:
                 system_prompt="Tu es un assistant IA serviable, précis et amical. Réponds de manière claire et concise.",
                 description="Assistant général polyvalent",
                 temperature=0.7,
-                tools=["web_search_preview"],
             ),
         ]
 
