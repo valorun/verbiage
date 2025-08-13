@@ -47,6 +47,10 @@ class VerbiageChat:
         self.conversation_manager = ConversationManager(config.conversations_dir)
         self.agent_manager = AgentManager(config.agents_dir, config)
 
+        # Ajouter un avertissement si OpenRouter est utilisé sans clé API spécifique
+        if config.api_provider == "openrouter" and not config.openrouter_api_key:
+            self.ui.print_warning("Attention: OpenRouter est sélectionné mais la clé API n'est pas configurée")
+        
         # Validation de la configuration
         is_valid, errors = config.validate()
         if not is_valid:
