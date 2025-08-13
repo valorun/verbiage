@@ -27,6 +27,7 @@ class Agent:
         self.description = description
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.tools = tools
         self.created_at = created_at or datetime.now().isoformat()
 
     def to_dict(self) -> dict:

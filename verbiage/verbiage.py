@@ -36,7 +36,7 @@ class VerbiageChat:
                 f"Agent actuel: {current_agent.name} - {current_agent.description}"
             )
         # astuces saisie
-        self.ui.print_info("💡 Enter pour nouvelle ligne, Alt+Enter pour envoyer")
+        self.ui.print_info("💡 Ctrl+E pour ouvrir l'éditeur")
         # historique
         self.ui.display_conversation_history(
             self.conversation_manager.current_conversation

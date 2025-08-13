@@ -178,8 +178,8 @@ Bienvenue dans Verbiage ! Votre assistant IA avec accès aux outils web.
 - `/help` - Afficher cette aide
 
 ## Saisie
-- **Enter** : Nouvelle ligne (mode multi-ligne)
-- **Alt+Enter** : Envoyer le message
+- **Enter** : Envoyer le message
+- **Ctrl+E** : Ouvrir l'éditeur de texte
 
 ## Utilisation
 
@@ -207,7 +207,7 @@ L'assistant peut utiliser des outils comme la recherche web.
 
         # Afficher l'aide pour la saisie multi-ligne
         self.console.print(
-            "[dim]💡 Enter pour nouvelle ligne, Alt+Enter pour envoyer, Ctrl+E pour éditeur[/dim]"
+            "[dim]💡 Ctrl+E pour ouvrir l'éditeur[/dim]"
         )
 
         kb = KeyBindings()

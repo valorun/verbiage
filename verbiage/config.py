@@ -31,8 +31,6 @@ class Config:
         default_config = {
             "api_key": "",
             "model": "deepseek/deepseek-chat-v3-0324:free",
-            "site_url": "http://localhost",
-            "site_name": "Verbiage Chat",
             "conversations_dir": str(self.global_config_dir / "conversations"),
             "agents_dir": str(self.global_config_dir / "agents"),
             "max_tokens": 2048,
@@ -65,14 +63,6 @@ class Config:
     @property
     def model(self) -> str:
         return self._config.get("model", "deepseek/deepseek-chat-v3-0324:free")
-
-    @property
-    def site_url(self) -> str:
-        return self._config.get("site_url", "http://localhost")
-
-    @property
-    def site_name(self) -> str:
-        return self._config.get("site_name", "Verbiage Chat")
 
     @property
     def conversations_dir(self) -> str:

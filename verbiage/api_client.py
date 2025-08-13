@@ -29,7 +29,6 @@ def build_openrouter_payload(agent_manager, conversation_manager, message: str) 
         "messages": messages,
         "temperature": current_agent.temperature if current_agent else config.temperature,
         "max_tokens": current_agent.max_tokens if current_agent else config.max_tokens,
-        "stop": None
     }
 
 def send_with_openrouter(agent_manager, conversation_manager, message: str, session: requests.Session) -> tuple:
@@ -42,8 +41,6 @@ def send_with_openrouter(agent_manager, conversation_manager, message: str, sess
             headers={
                 "Authorization": f"Bearer {config.api_key}",
                 "Content-Type": "application/json",
-                "HTTP-Referer": config.site_url,
-                "X-Title": config.site_name
             },
             json=payload
         )
