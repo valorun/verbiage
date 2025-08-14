@@ -35,9 +35,6 @@ class VerbiageChat:
             self.ui.print_info(
                 f"Agent actuel: {current_agent.name} - {current_agent.description}"
             )
-        # état web search
-        web_icon = "✅" if self.web_search_enabled else "❌"
-        self.ui.print_info(f"{web_icon} Recherche web: {'Activée' if self.web_search_enabled else 'Désactivée'}")
         # astuces saisie
         self.ui.print_info("💡 Ctrl+E pour ouvrir l'éditeur")
         # historique
