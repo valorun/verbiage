@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Verbiage - Chat GPT avec outils en terminal
-Application principale
+Application principale (version simplifiée)
 """
 
 import sys
@@ -77,26 +77,11 @@ class VerbiageChat:
             "/config": handle_config,
         }
 
-    def send_message_to_gpt(self, message: str) -> tuple[str, list[str], list[dict]]:
-        try:
-            return send_with_openrouter(
-                self.agent_manager, 
-                self.conversation_manager, 
-                message,
-                self.client_session
-            )
-        except Exception as e:
-            if self.debug:
-                self.ui.print_warning(f"Erreur API: {e}")
-            return str(e), [], []
-
-
     def handle_command(self, command: str) -> bool:
         command = command.lower().strip()
         cmd = command.split()[0]
         handler = self.cmd_handlers.get(cmd, handle_unknown)
         return handler(self, command)
-
 
     def run(self) -> None:
         """Boucle principale de l'application"""
@@ -140,8 +125,11 @@ class VerbiageChat:
 
                 # Obtenir la réponse
                 with self.ui.show_processing():
-                    response_content, tools_used, sources = self.send_message_to_gpt(
-                        user_input
+                    response_content, tools_used, sources = send_with_openrouter(
+                        self.agent_manager,
+                        self.conversation_manager,
+                        user_input,
+                        self.client_session
                     )
 
                 # Ajouter la réponse de l'assistant
