@@ -3,6 +3,7 @@
 import requests
 import json
 from .config import config
+from .api_utils import extract_text_from_response, extract_tools_from_response, extract_sources_from_response
 
 def build_openrouter_payload(agent_manager, conversation_manager, message: str) -> dict:
     """Construit le payload pour l'API OpenRouter"""
@@ -49,9 +50,12 @@ def send_with_openrouter(agent_manager, conversation_manager, message: str, sess
         response.raise_for_status()
         response_data = response.json()
         
-        content = response_data['choices'][0]['message']['content']
-        # Pour compatibilité temporaire - à simplifier plus tard
-        return content, [], []
+        # Extraire le contenu, les outils et les sources
+        content = extract_text_from_response(response_data)
+        tools_used = extract_tools_from_response(response_data)
+        sources = extract_sources_from_response(response_data)
+        
+        return content, tools_used, sources
         
     except Exception as e:
         return f"Erreur OpenRouter: {str(e)}", [], []
