@@ -200,8 +200,8 @@ def handle_web(app, command: str) -> bool:
     """Bascule l'état de la recherche web"""
     app.web_search_enabled = not app.web_search_enabled
     status = "activée" if app.web_search_enabled else "désactivée"
-    app.ui.print_success(f"Recherche web {status}")
     app.refresh_display()
+    app.ui.print_success(f"Recherche web {status}")
     return True
 
 

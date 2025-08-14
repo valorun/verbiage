@@ -49,7 +49,7 @@ class VerbiageChat:
         self.ui = VerbiageUI()
         self.conversation_manager = ConversationManager(config.conversations_dir)
         self.agent_manager = AgentManager(config.agents_dir, config)
-        self.web_search_enabled = True  # État par défaut
+        self.web_search_enabled = False
 
         # Validation de la configuration
         is_valid, errors = config.validate()
