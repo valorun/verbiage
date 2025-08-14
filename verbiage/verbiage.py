@@ -46,7 +46,6 @@ class VerbiageChat:
         self.ui = VerbiageUI()
         self.conversation_manager = ConversationManager(config.conversations_dir)
         self.agent_manager = AgentManager(config.agents_dir, config)
-        self.web_search_enabled = False
 
         # Validation de la configuration
         is_valid, errors = config.validate()
@@ -85,6 +84,31 @@ class VerbiageChat:
         handler = self.cmd_handlers.get(cmd, handle_unknown)
         return handler(self, command)
 
+    def _send_message(self, message: str, web_search: bool = False):
+        """Factorisation de l’envoi d’un message."""
+        if not self.conversation_manager.current_conversation:
+            self.conversation_manager.create_new_conversation(message)
+
+        self.conversation_manager.add_message("user", message)
+        self.refresh_display()
+
+        with self.ui.show_processing():
+            response_content, tools_used, sources = send_with_openrouter(
+                self.agent_manager,
+                self.conversation_manager,
+                message,
+                self.client_session,
+                web_search
+            )
+
+        self.conversation_manager.add_message(
+            "assistant", response_content, tools_used, sources
+        )
+        self.refresh_display()
+
+        if config.auto_save:
+            self.conversation_manager.save_conversation()
+
     def run(self) -> None:
         """Boucle principale de l'application"""
         self.ui.show_welcome()
@@ -117,33 +141,8 @@ class VerbiageChat:
                         break
                     continue
 
-                # Créer une nouvelle conversation si nécessaire
-                if not self.conversation_manager.current_conversation:
-                    self.conversation_manager.create_new_conversation(user_input)
-
-                # Ajouter le message utilisateur
-                self.conversation_manager.add_message("user", user_input)
-                self.refresh_display()
-
-                # Obtenir la réponse
-                with self.ui.show_processing():
-                    response_content, tools_used, sources = send_with_openrouter(
-                        self.agent_manager,
-                        self.conversation_manager,
-                        user_input,
-                        self.client_session,
-                        self.web_search_enabled
-                    )
-
-                # Ajouter la réponse de l'assistant
-                self.conversation_manager.add_message(
-                    "assistant", response_content, tools_used, sources
-                )
-                self.refresh_display()
-
-                # Sauvegarder la conversation si activé
-                if config.auto_save:
-                    self.conversation_manager.save_conversation()
+                # Envoi normal sans web
+                self._send_message(user_input, web_search=False)
 
             except KeyboardInterrupt:
                 self.ui.print_warning(
