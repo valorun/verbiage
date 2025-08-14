@@ -1,18 +1,24 @@
 """Handlers de commande pour Verbiage"""
 
+from verbiage.api_client import send_with_openrouter
+
+
 def handle_quit(app, command: str) -> bool:
     app.ui.print_warning("Au revoir ! 👋")
     return False
 
+
 def handle_clear(app, command: str) -> bool:
     app.refresh_display()
     return True
+
 
 def handle_new(app, command: str) -> bool:
     app.conversation_manager.current_conversation = None
     app.ui.print_success("Nouvelle conversation créée. Tapez votre premier message !")
     app.refresh_display()
     return True
+
 
 def handle_list(app, command: str) -> bool:
     app.refresh_display()
@@ -21,6 +27,7 @@ def handle_list(app, command: str) -> bool:
     app.ui.wait_for_enter()
     app.refresh_display()
     return True
+
 
 def handle_load(app, command: str) -> bool:
     parts = command.split()
@@ -37,6 +44,7 @@ def handle_load(app, command: str) -> bool:
             app.ui.print_error(f"Conversation {conversation_id} non trouvée.")
     return True
 
+
 def handle_undo(app, command: str) -> bool:
     if app.conversation_manager.delete_last_message():
         app.ui.print_success("Dernier message supprimé")
@@ -44,6 +52,7 @@ def handle_undo(app, command: str) -> bool:
         app.ui.print_error("Aucun message à supprimer")
     app.refresh_display()
     return True
+
 
 def handle_delete(app, command: str) -> bool:
     parts = command.split()
@@ -60,6 +69,7 @@ def handle_delete(app, command: str) -> bool:
             app.ui.print_error("Numéro de message invalide")
     app.refresh_display()
     return True
+
 
 def handle_edit(app, command: str) -> bool:
     parts = command.split()
@@ -81,8 +91,15 @@ def handle_edit(app, command: str) -> bool:
                         app.conversation_manager.current_conversation["messages"] = msgs[:msg_num]
                         if current_msg["role"] == "user":
                             with app.ui.show_processing():
-                                response_content, tools_used, sources = app.send_message_to_gpt(new_content)
-                            app.conversation_manager.add_message("assistant", response_content, tools_used, sources)
+                                response_content, tools_used, sources = send_with_openrouter(
+                                    app.agent_manager,
+                                    app.conversation_manager,
+                                    new_content,
+                                    app.client_session
+                                )
+                            app.conversation_manager.add_message(
+                                "assistant", response_content, tools_used, sources
+                            )
                     else:
                         app.ui.print_error("Erreur lors de la modification")
                 else:
@@ -94,11 +111,13 @@ def handle_edit(app, command: str) -> bool:
     app.refresh_display()
     return True
 
+
 def handle_help(app, command: str) -> bool:
     app.refresh_display()
     app.ui.show_help()
     app.refresh_display()
     return True
+
 
 def handle_agents(app, command: str) -> bool:
     agents = app.agent_manager.list_agents()
@@ -108,6 +127,7 @@ def handle_agents(app, command: str) -> bool:
     app.ui.wait_for_enter()
     app.refresh_display()
     return True
+
 
 def handle_agent(app, command: str) -> bool:
     app.refresh_display()
@@ -123,6 +143,7 @@ def handle_agent(app, command: str) -> bool:
             app.ui.print_error(f"Agent '{agent_name}' non trouvé")
     return True
 
+
 def handle_create_agent(app, command: str) -> bool:
     app.refresh_display()
     agent_data = app.ui.get_agent_creation_input()
@@ -135,6 +156,7 @@ def handle_create_agent(app, command: str) -> bool:
     else:
         app.ui.print_info("Création annulée")
     return True
+
 
 def handle_raw(app, command: str) -> bool:
     if not app.conversation_manager.current_conversation:
@@ -165,11 +187,13 @@ def handle_raw(app, command: str) -> bool:
             app.ui.print_error("Numéro de message invalide")
     return True
 
+
 def handle_config(app, command: str) -> bool:
     app.config.print_config(app.ui)
     app.ui.wait_for_enter()
     app.refresh_display()
     return True
+
 
 def handle_unknown(app, command: str) -> bool:
     app.ui.print_error(f"Commande inconnue: {command}")
