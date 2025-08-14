@@ -111,7 +111,7 @@ def handle_edit(app, command: str) -> bool:
 
     # Troncature et regénération
     msgs = app.conversation_manager.current_conversation["messages"]
-    app.conversation_manager.current_conversation["messages"] = msgs[:msg_num + 1]
+    app.conversation_manager.current_conversation["messages"] = msgs[:msg_num]
 
     with app.ui.show_processing():
         response_content, tools_used, sources = send_with_openrouter(

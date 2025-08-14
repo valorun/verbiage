@@ -28,8 +28,12 @@ def build_openrouter_payload(agent_manager, conversation_manager, message: str, 
     payload = {
         "model": config.model,
         "messages": messages,
+        "web_search_options": {
+            "search_context_size": "low"
+        },
         "temperature": current_agent.temperature if current_agent else config.temperature,
         "max_tokens": current_agent.max_tokens if current_agent else config.max_tokens,
+        "tools": {"type": "web_search_preview"}
     }
     
     # Ajouter le plugin web seulement si activé
