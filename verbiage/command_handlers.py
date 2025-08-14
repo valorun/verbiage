@@ -95,7 +95,8 @@ def handle_edit(app, command: str) -> bool:
                                     app.agent_manager,
                                     app.conversation_manager,
                                     new_content,
-                                    app.client_session
+                                    app.client_session,
+                                    app.web_search_enabled
                                 )
                             app.conversation_manager.add_message(
                                 "assistant", response_content, tools_used, sources
@@ -191,6 +192,15 @@ def handle_raw(app, command: str) -> bool:
 def handle_config(app, command: str) -> bool:
     app.config.print_config(app.ui)
     app.ui.wait_for_enter()
+    app.refresh_display()
+    return True
+
+
+def handle_web(app, command: str) -> bool:
+    """Bascule l'état de la recherche web"""
+    app.web_search_enabled = not app.web_search_enabled
+    status = "activée" if app.web_search_enabled else "désactivée"
+    app.ui.print_success(f"Recherche web {status}")
     app.refresh_display()
     return True
 

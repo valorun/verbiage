@@ -18,7 +18,7 @@ from verbiage.command_handlers import (
     handle_quit, handle_clear, handle_new, handle_list,
     handle_load, handle_undo, handle_delete, handle_edit,
     handle_help, handle_agents, handle_agent, handle_create_agent,
-    handle_raw, handle_config, handle_unknown
+    handle_raw, handle_config, handle_unknown, handle_web
 )
 
 
@@ -35,6 +35,9 @@ class VerbiageChat:
             self.ui.print_info(
                 f"Agent actuel: {current_agent.name} - {current_agent.description}"
             )
+        # état web search
+        web_icon = "🔍" if self.web_search_enabled else "🔎"
+        self.ui.print_info(f"{web_icon} Recherche web: {'Activée' if self.web_search_enabled else 'Désactivée'}")
         # astuces saisie
         self.ui.print_info("💡 Ctrl+E pour ouvrir l'éditeur")
         # historique
@@ -46,6 +49,7 @@ class VerbiageChat:
         self.ui = VerbiageUI()
         self.conversation_manager = ConversationManager(config.conversations_dir)
         self.agent_manager = AgentManager(config.agents_dir, config)
+        self.web_search_enabled = True  # État par défaut
 
         # Validation de la configuration
         is_valid, errors = config.validate()
@@ -75,6 +79,7 @@ class VerbiageChat:
             "/create-agent": handle_create_agent,
             "/raw": handle_raw,
             "/config": handle_config,
+            "/web": handle_web,
         }
 
     def handle_command(self, command: str) -> bool:
@@ -129,7 +134,8 @@ class VerbiageChat:
                         self.agent_manager,
                         self.conversation_manager,
                         user_input,
-                        self.client_session
+                        self.client_session,
+                        self.web_search_enabled
                     )
 
                 # Ajouter la réponse de l'assistant

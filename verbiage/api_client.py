@@ -5,7 +5,7 @@ import json
 from .config import config
 from .api_utils import extract_text_from_response, extract_tools_from_response, extract_sources_from_response
 
-def build_openrouter_payload(agent_manager, conversation_manager, message: str) -> dict:
+def build_openrouter_payload(agent_manager, conversation_manager, message: str, web_search_enabled: bool) -> dict:
     """Construit le payload pour l'API OpenRouter"""
     messages = []
     
@@ -25,17 +25,22 @@ def build_openrouter_payload(agent_manager, conversation_manager, message: str) 
     # Configuration de l'agent
     current_agent = agent_manager.get_current_agent()
     
-    return {
+    payload = {
         "model": config.model,
-        "plugins": [{ "id": "web" }],
         "messages": messages,
         "temperature": current_agent.temperature if current_agent else config.temperature,
         "max_tokens": current_agent.max_tokens if current_agent else config.max_tokens,
     }
+    
+    # Ajouter le plugin web seulement si activé
+    if web_search_enabled:
+        payload["plugins"] = [{"id": "web"}]
+    
+    return payload
 
-def send_with_openrouter(agent_manager, conversation_manager, message: str, session: requests.Session) -> tuple:
+def send_with_openrouter(agent_manager, conversation_manager, message: str, session: requests.Session, web_search_enabled: bool) -> tuple:
     """Envoyer une requête à l'API OpenRouter"""
-    payload = build_openrouter_payload(agent_manager, conversation_manager, message)
+    payload = build_openrouter_payload(agent_manager, conversation_manager, message, web_search_enabled)
     
     try:
         response = session.post(
