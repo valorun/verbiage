@@ -85,14 +85,34 @@ def handle_edit(app, command: str) -> bool:
                     app.conversation_manager.current_conversation
                 )
                 if new_content:
-                    if app.conversation_manager.edit_message(msg_num, new_content):
-                        app.ui.print_success(f"Message #{msg_num} modifié")
+                    if new_content.startswith("/web"):
+                        message = new_content[4:].strip()
+                        if not message:
+                            app.ui.print_error("Usage : /web <votre message>")
+                            return True
+                        # On remplace le contenu du message utilisateur
+                        app.conversation_manager.edit_message(msg_num, message)
+                        # On tronque l’historique juste après ce message
                         msgs = app.conversation_manager.current_conversation["messages"]
-                        app.conversation_manager.current_conversation["messages"] = msgs[:msg_num]
-                        if current_msg["role"] == "user":
-                            if new_content.startswith("/web"):
-                                handle_web(app, new_content)
-                            else:
+                        app.conversation_manager.current_conversation["messages"] = msgs[:msg_num + 1]
+                        # On relance la génération avec web_search=True
+                        with app.ui.show_processing():
+                            response_content, tools_used, sources = send_with_openrouter(
+                                app.agent_manager,
+                                app.conversation_manager,
+                                message,
+                                app.client_session,
+                                web_search=True
+                            )
+                        app.conversation_manager.add_message(
+                            "assistant", response_content, tools_used, sources
+                        )
+                    else:
+                        if app.conversation_manager.edit_message(msg_num, new_content):
+                            app.ui.print_success(f"Message #{msg_num} modifié")
+                            msgs = app.conversation_manager.current_conversation["messages"]
+                            app.conversation_manager.current_conversation["messages"] = msgs[:msg_num]
+                            if current_msg["role"] == "user":
                                 response_content, tools_used, sources = send_with_openrouter(
                                     app.agent_manager,
                                     app.conversation_manager,
@@ -103,8 +123,8 @@ def handle_edit(app, command: str) -> bool:
                                 app.conversation_manager.add_message(
                                     "assistant", response_content, tools_used, sources
                                 )
-                    else:
-                        app.ui.print_error("Erreur lors de la modification")
+                        else:
+                            app.ui.print_error("Erreur lors de la modification")
                 else:
                     app.ui.print_info("Modification annulée")
             else:
