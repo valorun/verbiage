@@ -75,62 +75,56 @@ def handle_edit(app, command: str) -> bool:
     parts = command.split()
     if len(parts) != 2:
         app.ui.print_error("Usage: /edit <numéro>")
-    else:
-        try:
-            msg_num = int(parts[1])
-            current_msg = app.conversation_manager.get_message(msg_num)
-            if current_msg:
-                new_content = app.ui.get_message_edit_input(
-                    current_msg["content"],
-                    app.conversation_manager.current_conversation
-                )
-                if new_content:
-                    if new_content.startswith("/web"):
-                        message = new_content[4:].strip()
-                        if not message:
-                            app.ui.print_error("Usage : /web <votre message>")
-                            return True
-                        # On remplace le contenu du message utilisateur
-                        app.conversation_manager.edit_message(msg_num, message)
-                        # On tronque l’historique juste après ce message
-                        msgs = app.conversation_manager.current_conversation["messages"]
-                        app.conversation_manager.current_conversation["messages"] = msgs[:msg_num + 1]
-                        # On relance la génération avec web_search=True
-                        with app.ui.show_processing():
-                            response_content, tools_used, sources = send_with_openrouter(
-                                app.agent_manager,
-                                app.conversation_manager,
-                                message,
-                                app.client_session,
-                                web_search=True
-                            )
-                        app.conversation_manager.add_message(
-                            "assistant", response_content, tools_used, sources
-                        )
-                    else:
-                        if app.conversation_manager.edit_message(msg_num, new_content):
-                            app.ui.print_success(f"Message #{msg_num} modifié")
-                            msgs = app.conversation_manager.current_conversation["messages"]
-                            app.conversation_manager.current_conversation["messages"] = msgs[:msg_num]
-                            if current_msg["role"] == "user":
-                                response_content, tools_used, sources = send_with_openrouter(
-                                    app.agent_manager,
-                                    app.conversation_manager,
-                                    new_content,
-                                    app.client_session,
-                                    web_search=False
-                                )
-                                app.conversation_manager.add_message(
-                                    "assistant", response_content, tools_used, sources
-                                )
-                        else:
-                            app.ui.print_error("Erreur lors de la modification")
-                else:
-                    app.ui.print_info("Modification annulée")
-            else:
-                app.ui.print_error(f"Message #{msg_num} non trouvé")
-        except ValueError:
-            app.ui.print_error("Numéro de message invalide")
+        return True
+
+    try:
+        msg_num = int(parts[1])
+    except ValueError:
+        app.ui.print_error("Numéro de message invalide")
+        return True
+
+    current_msg = app.conversation_manager.get_message(msg_num)
+    if not current_msg:
+        app.ui.print_error(f"Message #{msg_num} non trouvé")
+        return True
+
+    new_content = app.ui.get_message_edit_input(
+        current_msg["content"],
+        app.conversation_manager.current_conversation
+    )
+    if not new_content:
+        app.ui.print_info("Modification annulée")
+        return True
+
+    # Détection /web
+    web_search = new_content.startswith("/web")
+    if web_search:
+        new_content = new_content[4:].strip()
+        if not new_content:
+            app.ui.print_error("Usage : /web <votre message>")
+            return True
+
+    # Mise à jour du message utilisateur
+    if not app.conversation_manager.edit_message(msg_num, new_content):
+        app.ui.print_error("Erreur lors de la modification")
+        return True
+
+    # Troncature et regénération
+    msgs = app.conversation_manager.current_conversation["messages"]
+    app.conversation_manager.current_conversation["messages"] = msgs[:msg_num + 1]
+
+    with app.ui.show_processing():
+        response_content, tools_used, sources = send_with_openrouter(
+            app.agent_manager,
+            app.conversation_manager,
+            new_content,
+            app.client_session,
+            web_search=web_search
+        )
+
+    app.conversation_manager.add_message(
+        "assistant", response_content, tools_used, sources
+    )
     app.refresh_display()
     return True
 
