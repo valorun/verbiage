@@ -90,7 +90,9 @@ def handle_edit(app, command: str) -> bool:
                         msgs = app.conversation_manager.current_conversation["messages"]
                         app.conversation_manager.current_conversation["messages"] = msgs[:msg_num]
                         if current_msg["role"] == "user":
-                            with app.ui.show_processing():
+                            if new_content.startswith("/web"):
+                                handle_web(app, new_content)
+                            else:
                                 response_content, tools_used, sources = send_with_openrouter(
                                     app.agent_manager,
                                     app.conversation_manager,
@@ -98,9 +100,9 @@ def handle_edit(app, command: str) -> bool:
                                     app.client_session,
                                     web_search=False
                                 )
-                            app.conversation_manager.add_message(
-                                "assistant", response_content, tools_used, sources
-                            )
+                                app.conversation_manager.add_message(
+                                    "assistant", response_content, tools_used, sources
+                                )
                     else:
                         app.ui.print_error("Erreur lors de la modification")
                 else:
