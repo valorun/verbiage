@@ -96,14 +96,6 @@ def handle_edit(app, command: str) -> bool:
         app.ui.print_info("Modification annulée")
         return True
 
-    # Détection /web
-    web_search = new_content.startswith("/web")
-    if web_search:
-        new_content = new_content[4:].strip()
-        if not new_content:
-            app.ui.print_error("Usage : /web <votre message>")
-            return True
-
     # Mise à jour du message utilisateur
     if not app.conversation_manager.edit_message(msg_num, new_content):
         app.ui.print_error("Erreur lors de la modification")
@@ -118,8 +110,7 @@ def handle_edit(app, command: str) -> bool:
             app.agent_manager,
             app.conversation_manager,
             new_content,
-            app.client_session,
-            web_search=web_search
+            app.client_session
         )
 
     app.conversation_manager.add_message(

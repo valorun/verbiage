@@ -83,7 +83,7 @@ class VerbiageChat:
         handler = self.cmd_handlers.get(cmd, handle_unknown)
         return handler(self, command)
 
-    def _send_message(self, message: str, web_search: bool = False):
+    def _send_message(self, message: str):
         """Factorisation de l'envoi d'un message."""
         if not self.conversation_manager.current_conversation:
             self.conversation_manager.create_new_conversation(message)
@@ -96,8 +96,7 @@ class VerbiageChat:
                 self.agent_manager,
                 self.conversation_manager,
                 message,
-                self.client_session,
-                web_search
+                self.client_session
             )
 
         self.conversation_manager.add_message(
@@ -140,8 +139,8 @@ class VerbiageChat:
                         break
                     continue
 
-                # Envoi normal sans web
-                self._send_message(user_input, web_search=False)
+                # Envoi normal
+                self._send_message(user_input)
 
             except KeyboardInterrupt:
                 self.ui.print_warning(
