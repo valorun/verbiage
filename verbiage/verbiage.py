@@ -18,7 +18,7 @@ from verbiage.command_handlers import (
     handle_quit, handle_clear, handle_new, handle_list,
     handle_load, handle_undo, handle_delete, handle_edit,
     handle_help, handle_agents, handle_agent, handle_create_agent,
-    handle_raw, handle_config, handle_unknown, handle_web
+    handle_raw, handle_config, handle_unknown
 )
 
 
@@ -75,7 +75,6 @@ class VerbiageChat:
             "/create-agent": handle_create_agent,
             "/raw": handle_raw,
             "/config": handle_config,
-            "/web": handle_web,
         }
 
     def handle_command(self, command: str) -> bool:
@@ -85,7 +84,7 @@ class VerbiageChat:
         return handler(self, command)
 
     def _send_message(self, message: str, web_search: bool = False):
-        """Factorisation de l’envoi d’un message."""
+        """Factorisation de l'envoi d'un message."""
         if not self.conversation_manager.current_conversation:
             self.conversation_manager.create_new_conversation(message)
 

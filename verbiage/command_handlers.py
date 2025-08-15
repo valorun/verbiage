@@ -212,16 +212,6 @@ def handle_config(app, command: str) -> bool:
     return True
 
 
-def handle_web(app, command: str) -> bool:
-    """/web <message> : envoyer un message avec recherche web activée."""
-    message = command[4:].strip()  # retire "/web"
-    if not message:
-        app.ui.print_error("Usage : /web <votre message>")
-        return True
-    app._send_message(message, web_search=True)
-    return True
-
-
 def handle_unknown(app, command: str) -> bool:
     app.ui.print_error(f"Commande inconnue: {command}")
     return True
