@@ -44,6 +44,7 @@ Bienvenue dans Verbiage ! Votre assistant IA avec accès aux outils web.
 - `/new` - Nouvelle conversation
 - `/load` - Charger une conversation existante
 - `/list` - Lister les conversations
+- `/model` - Changer de modèle
 - `/help` - Afficher l'aide
 - `/quit` - Quitter l'application
 """
@@ -172,6 +173,9 @@ Bienvenue dans Verbiage ! Votre assistant IA avec accès aux outils web.
 - `/agents` - Lister les agents disponibles
 - `/create-agent` - Créer un nouvel agent
 
+### Modèles
+- `/model` - Changer de modèle
+
 ### Système
 - `/config` - Afficher la configuration
 - `/quit` - Quitter l'application
@@ -272,6 +276,30 @@ L'assistant peut utiliser des outils comme la recherche web.
             )
 
         self.console.print(table)
+
+    def select_model(self, available: list[str], current: str) -> str | None:
+        """Permet à l'utilisateur de choisir un modèle dans la liste."""
+        self.clear()
+        table = Table(title="Modèles disponibles")
+        table.add_column("#", justify="right", style="cyan")
+        table.add_column("Nom du modèle", style="green")
+
+        for idx, m in enumerate(available, 1):
+            marker = " ✓" if m == current else ""
+            table.add_row(str(idx), m + marker)
+
+        self.console.print(table)
+        choice = prompt("Numéro du modèle (Entrée pour annuler) : ").strip()
+        if not choice:
+            return None
+        try:
+            index = int(choice) - 1
+            if 0 <= index < len(available):
+                return available[index]
+        except ValueError:
+            pass
+        self.print_error("Choix invalide.")
+        return None
 
     def get_agent_creation_input(self) -> dict:
         """Obtenir les informations pour créer un agent"""

@@ -31,6 +31,11 @@ class Config:
         default_config = {
             "api_key": "",
             "model": "deepseek/deepseek-chat-v3-0324:free",
+            "available_models": [
+                "deepseek/deepseek-chat-v3-0324:free",
+                "anthropic/claude-3-haiku",
+                "openai/gpt-4o-mini"
+            ],
             "conversations_dir": str(self.global_config_dir / "conversations"),
             "agents_dir": str(self.global_config_dir / "agents"),
             "max_tokens": 2048,
@@ -51,6 +56,14 @@ class Config:
             print(f"Erreur lors du chargement de la configuration: {e}")
             return {}
 
+    def _save_config(self):
+        """Sauvegarder la configuration dans le fichier JSON"""
+        try:
+            with open(self.config_file, 'w', encoding='utf-8') as f:
+                json.dump(self._config, f, indent=4)
+        except Exception as e:
+            print(f"Erreur lors de la sauvegarde de la configuration: {e}")
+
     def _validate_dirs(self):
         """Valider et créer les répertoires de configuration"""
         Path(self.conversations_dir).mkdir(parents=True, exist_ok=True)
@@ -63,6 +76,10 @@ class Config:
     @property
     def model(self) -> str:
         return self._config.get("model", "deepseek/deepseek-chat-v3-0324:free")
+
+    @property
+    def available_models(self) -> list[str]:
+        return self._config.get("available_models", [self.model])
 
     @property
     def conversations_dir(self) -> str:
@@ -117,6 +134,7 @@ class Config:
         """Affiche la configuration via l'UI"""
         ui.print_info("⚙️ Configuration Verbiage")
         ui.print_info(f"Modèle: {self.model}")
+        ui.print_info(f"Modèles disponibles: {', '.join(self.available_models)}")
         ui.print_info(f"Temperature: {self.temperature}")
         ui.print_info(f"Max tokens: {self.max_tokens}")
         ui.print_info(f"Auto-sauvegarde: {'activée' if self.auto_save else 'désactivée'}")
@@ -124,7 +142,3 @@ class Config:
         ui.print_info(f"Répertoire conversations: {self.conversations_dir}")
         ui.print_info(f"Répertoire agents: {self.agents_dir}")
         ui.print_info(f"Agent par défaut: {self.default_agent}")
-
-
-# Instance globale de configuration
-config = Config()

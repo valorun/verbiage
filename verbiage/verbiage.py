@@ -18,7 +18,7 @@ from verbiage.command_handlers import (
     handle_quit, handle_clear, handle_new, handle_list,
     handle_load, handle_undo, handle_delete, handle_edit,
     handle_help, handle_agents, handle_agent, handle_create_agent,
-    handle_raw, handle_config, handle_unknown
+    handle_raw, handle_config, handle_model, handle_unknown
 )
 
 
@@ -35,6 +35,10 @@ class VerbiageChat:
             self.ui.print_info(
                 f"Agent actuel: {current_agent.name} - {current_agent.description}"
             )
+        # en-tête modèle
+        self.ui.print_info(
+            f"Modèle actuel: {config.model}"
+        )
         # astuces saisie
         self.ui.print_info("💡 Ctrl+E pour ouvrir l'éditeur")
         # historique
@@ -75,6 +79,7 @@ class VerbiageChat:
             "/create-agent": handle_create_agent,
             "/raw": handle_raw,
             "/config": handle_config,
+            "/model": handle_model,
         }
 
     def handle_command(self, command: str) -> bool:
@@ -117,6 +122,9 @@ class VerbiageChat:
             self.ui.print_info(
                 f"Agent actuel: {current_agent.name} - {current_agent.description}"
             )
+        self.ui.print_info(
+            f"Modèle actuel: {config.model}"
+        )
 
         while True:
             try:

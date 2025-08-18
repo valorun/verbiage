@@ -203,6 +203,16 @@ def handle_config(app, command: str) -> bool:
     return True
 
 
+def handle_model(app, command: str) -> bool:
+    current = app.config.model
+    new_model = app.ui.select_model(app.config.available_models, current)
+    if new_model and new_model != current:
+        app.config._config["model"] = new_model
+        app.config._save_config()
+        app.ui.print_success(f"Modèle changé : {new_model}")
+    return True
+
+
 def handle_unknown(app, command: str) -> bool:
     app.ui.print_error(f"Commande inconnue: {command}")
     return True
